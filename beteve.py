@@ -45,30 +45,28 @@ if st.button("Ler mais", key='Laura'):
         O agente Dale Cooper é o encarregado de investigar o crime, e são por seus olhos que conhecemos o mundo de Twin Peaks. 
         Assistimos como a tragédia abala as estruturas da então (aparentemente) pacata cidade. 
         Por meio da investigação, conhecemos camadas e mais camadas de cada personagem e de suas relações. 
-        Entendemos os dramas, e vemos múltiplos enredos serem movidos pela eterna pergunta gritando segundo plano: 
+        Entendemos os dramas, e vemos múltiplos enredos serem movidos pela angustiante pergunta gritando em segundo plano: 
         **Quem matou Laura Palmer?**
 
         **SUBVERSÕES**  
         Twin Peaks se inicia com a aparência de um mistério policial clássico:
-        uma investigação de assassinato conduzida por um detetive carismático e personagens misteriosos potencialmente suspeitos. 
+        uma investigação de assassinato conduzida por um detetive carismático, e personagens misteriosos potencialmente suspeitos. 
         Aos poucos, porém, vamos percebendo uma subversão gigantesca desse gênero: trata-se de uma narrativa muito mais subjetiva e abstrata do que essa - é uma série Lynchiana, afinal.
 
-        No terceiro episódio da série, temos uma das cenas mais marcantes da história da televisão: 
-        em um sonho, agente Cooper está idoso, sentado numa poltrona numa sala toda vermelha. 
-        Na sua frente, estão sentadas duas pessoas: um homem muito pequeno, com um terno vermelho e olhos pretos. 
-        Ao seu lado, a sorridente Laura Palmer. Nesse quarto vermelho, o áudio e as imagens são gravadas ao contrário, 
-        e há um clima etéreo indescritível no ar. O homem pequeno, com as palavras soando ao contrário, diz: 
-        **"De onde nós somos, os pássaros cantam uma canção bonita, e há sempre música no ar".** 
-        E então, Laura Palmer diz: **"Sinto que conheço ela. Mas às vezes, meus braços dobram pra trás".** 
+        O surrealismo é introduzido no terceiro episódio da série, numa das cenas mais marcantes e aterrorizantes da história da televisão: 
+        em um sonho, agente Cooper é idoso, sentado numa sala toda vermelha. 
+        A sua frente, estão sentadas duas pessoas: um homem muito pequeno, com um terno vermelho e olhos pretos. 
+        Ao seu lado, Laura Palmer. Nesse quarto vermelho, o áudio e as imagens são gravadas ao contrário, 
+        e há um clima etéreo no ar. O homem pequeno, com uma voz perturbadora e com as palavras soando ao contrário, diz: 
+        **"De onde nós somos, os pássaros cantam uma canção bonita, e há sempre música no ar. Ela não parece a Laura Palmer?".** 
+        Na sequência, Laura Palmer diz: **"Sinto que conheço ela. Mas às vezes, meus braços dobram pra trás".** 
         Uma música começa, o homem pequeno se levanta e começa a dançar. Laura Palmer, sorrindo, se levanta e caminha até o agente Cooper. 
         Se abaixa, e cochicha algo em seu ouvido.
     """)
 
-    # Inserir a imagem associada ao texto
     st.image("https://static.wikia.nocookie.net/twinpeaks/images/0/0f/MFAPsitting.jpg",
              caption="'O Homem de Outro Lugar'")
 
-    # Continuação do texto
     st.markdown("""
         **AS CAMADAS**
 
