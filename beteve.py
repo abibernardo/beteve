@@ -76,9 +76,9 @@ if st.button("Ler mais", key='Laura'):
         tinham com Laura, vai se construindo uma personagem densa, complexa, subjetiva e real, 
         **sem que ela apareça na tela** - de fora pra dentro.
 
-        Isso é um dos fatores que torna Twin Peaks e Laura Palmer tão especiais: a fortíssima sensação que a série passa, devido a tudo que citei, 
-        de que a narrativa é **assombrada pela sua protagonista**. 
-        Em muitos momentos, é um sentimento aterrorizante - diga-se de passagem.
+        Esse é o coração de Twin Peaks: a fortíssima sensação
+        de que **a narrativa é assombrada pela sua protagonista**. 
+        Em muitos momentos, é um sentimento aterrorizante - diga-se de passagem. Como Donna desabafa em frente ao túmulo de Laura Palmer: 'É quase como se não tivessem te enterrado fundo o suficiente'.  
     """)
 st.divider()
 st.markdown("""
