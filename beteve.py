@@ -161,24 +161,6 @@ st.divider()
 st.markdown("""
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0;">
         <div>
-            <h3><b>Sobre Xógum:</b> Sutilezas na brutalidade</h3>
-        </div>
-        <div>
-            <img src="https://www.cnnbrasil.com.br/wp-content/uploads/sites/12/2024/09/Xogum_-A-Gloriosa-Saga-do-Japao.png?w=1024" 
-            style="width: 300px; height: auto; margin-left: 20px;">
-        </div>
-    </div>
-    """, unsafe_allow_html=True)
-
-st.write("")
-if st.button("Ler mais", key='xogum'):
-    st.markdown("""
-        ## Matéria Completa     
-    """)
-st.divider()
-st.markdown("""
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0;">
-        <div>
             <h3><b>Sobre Baby Reindeer: O espectro da Sinceridade na arte</b> </h3>
         </div>
         <div>
@@ -191,7 +173,32 @@ st.markdown("""
 st.write("")
 if st.button("Ler mais", key='Beberena'):
     st.markdown("""
-        ## Matéria Completa     
+        Um conceito interessante na arte e que afeta diretamente como percebemos uma obra, é a **sinceridade**. 
+        É algo simultaneamente difícil de definir, e óbvio de identificar.
+
+        Ser sincero não é sinônimo de ser literal - uma obra de ficção científica como _Watchmen_ ou um filme completamente abstrato 
+        como _Eraserhead_ podem ser profundamente sinceros, enquanto documentários como _The Last Dance_ ou filmes biográficos como 
+        _Boyhood_ podem ser totalmente cínicos ou superficiais. É abstrato, mas eu, pessoalmente, consigo identificar se o que assisto 
+        é sincero ou não imediatamente - mesmo que não saiba muito bem explicar o porquê.
+
+        A maioria das séries de prestígio, são sinceras, e a maioria das séries medianas, são superficiais. 
+        Há exceções para ambas as regras, e **Bebê Rena** é o outlier mais escandaloso que já vi.
+    """)
+
+    # Inserir a imagem associada ao texto
+    st.image("https://www.joblo.com/wp-content/uploads/2024/07/Baby-Reindeer-lawsuit-1024x538.jpg",
+             caption="Imagem de divulgação de Bebê Rena - 2024")
+
+    # Continuação do texto
+    st.markdown("""
+        A história é baseada em situações de abuso reais que o criador, escritor e protagonista Richard Gadd passou, 
+        e digo com segurança que nunca vi nada igual.
+
+        A sensação é de estar assistindo a uma confissão, ou a conclusão de uma sessão de terapia. 
+        O que inicialmente parece ser uma série visualmente sem graça e com uma narração desestimulante, se desenrola em um inesperado soco no estômago. 
+        A narrativa rapidamente se afasta de algo mais teatral, e torna-se um desabafo direto. Richard Gadd não conta a história com a maestria de um bom escritor, 
+        mas reflete sobre os abusos que sofreu, destrincha os seus fracassos e admite fantasias sombrias de uma forma tão crua, dolorida e confessional que torna 
+        **Bebê Rena** algo especial.
     """)
 st.divider()
 
