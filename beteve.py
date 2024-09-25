@@ -64,13 +64,12 @@ if st.button("Ler mais", key='Laura'):
         Se abaixa, e cochicha algo em seu ouvido.
     """)
 
+    st.image(
+    "https://static.wikia.nocookie.net/twinpeaks/images/0/0f/MFAPsitting.jpg",
+    caption="'The Man from Another Place'",
+    width=400  
+)
 
-    st.markdown("""
-    <div style='text-align: center;'>
-        <img src="https://static.wikia.nocookie.net/twinpeaks/images/0/0f/MFAPsitting.jpg" 
-        style="width: 400px;">
-    </div>
-    """, unsafe_allow_html=True)
 
     st.markdown("""
         **AS CAMADAS**
