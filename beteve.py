@@ -16,7 +16,7 @@ st.markdown("""
 st.write("   ")
 st.write("   ")
 st.markdown("""
-    <h1 style='text-align: center; font-size: 20px; font-family: Arial;'>
+    <h1 style='text-align: center; font-size: 20px; font-family: Palatino;'>
         Opiniões, críticas, elogios e palpites sobre o melhor e o pior da televisão
     </h1>
     """, unsafe_allow_html=True)
