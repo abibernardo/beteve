@@ -1,10 +1,10 @@
 import streamlit as st
 
-st.markdown("""
-    <h1 style='text-align: center; font-size: 60px; font-family: Palatino;'>
-        BETEVÊ
-    </h1>
-    """, unsafe_allow_html=True)
+#st.markdown("""
+    #<h1 style='text-align: center; font-size: 60px; font-family: Palatino;'>
+      #  BETEVÊ
+    #</h1>
+    #""", unsafe_allow_html=True)
 
 # Exibindo a imagem logo abaixo do título
 st.markdown("""
