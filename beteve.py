@@ -68,7 +68,7 @@ if st.button("Ler mais", key='Laura'):
     st.markdown("""
     <div style='text-align: center;'>
         <img src="https://static.wikia.nocookie.net/twinpeaks/images/0/0f/MFAPsitting.jpg" 
-        style="width: 150px;">
+        style="width: 400px;">
     </div>
     """, unsafe_allow_html=True)
 
