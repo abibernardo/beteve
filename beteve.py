@@ -188,7 +188,7 @@ if st.button("Ler mais", key='Bojack'):
     coisas são irreversíveis.
 """)
 
-    st.image("https://pyxis.nymag.com/v1/imgs/e11/c74/f09b681e3e0c0930aaa3a9b200d28b006f-bojack-horseman-s6-ep-16.jpg",
+    st.image("https://static1.srcdn.com/wordpress/wp-content/uploads/2020/03/BoJack-on-Phone-and-Black-Goo-Cropped.jpg",
              caption="'The View From Halfway Down'")
     
     st.markdown("""
@@ -199,8 +199,8 @@ if st.button("Ler mais", key='Bojack'):
         episódio de *Bojack Horseman*.
         
         Ele tem como cenário a mente do protagonista, e se trata de um jantar de Bojack com Beatrice (sua mãe), Sarah Linn, Secretariat 
-        - seu ídolo de infância, que nesse cenário parece representar seu pai, Butterscotch - e outros personagens cruciais na série, 
-        que obviamente, foram desenvolvidos exaustivamente ao longo das temporadas.
+        (seu ídolo de infância, que nesse cenário parece representar seu pai, Butterscotch) e outros personagens cruciais na série, 
+        que foram desenvolvidos exaustivamente ao longo das temporadas.
         
         Tentar descrever *A Vista da Metade pra Baixo* é uma tarefa impossível, porque o episódio não acontece sozinho: ele é o cume de 
         tudo construído na série. É uma conclusão dolorida, brilhante e belíssima, que tem como base um dos arcos de personagem mais 
