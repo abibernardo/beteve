@@ -188,27 +188,27 @@ if st.button("Ler mais", key='Bojack'):
     coisas são irreversíveis.
 """)
 
-st.image("https://pyxis.nymag.com/v1/imgs/e11/c74/f09b681e3e0c0930aaa3a9b200d28b006f-bojack-horseman-s6-ep-16.jpg",
-         caption="'The View From Halfway Down'")
-
-st.markdown("""
-    **The View From Halfway Down**
+    st.image("https://pyxis.nymag.com/v1/imgs/e11/c74/f09b681e3e0c0930aaa3a9b200d28b006f-bojack-horseman-s6-ep-16.jpg",
+             caption="'The View From Halfway Down'")
     
-    Após seis temporadas com a construção do personagem de Bojack, momentos profundamente devastadores e estopins inimagináveis, 
-    temos o episódio mais bem escrito, na minha opinião, da história da televisão: **"A Vista da Metade pra Baixo"**, o penúltimo 
-    episódio de *Bojack Horseman*.
-    
-    Ele tem como cenário a mente do protagonista, e se trata de um jantar de Bojack com Beatrice (sua mãe), Sarah Linn, Secretariat 
-    - seu ídolo de infância, que nesse cenário parece representar seu pai, Butterscotch - e outros personagens cruciais na série, 
-    que obviamente, foram desenvolvidos exaustivamente ao longo das temporadas.
-    
-    Tentar descrever *A Vista da Metade pra Baixo* é uma tarefa impossível, porque o episódio não acontece sozinho: ele é o cume de 
-    tudo construído na série. É uma conclusão dolorida, brilhante e belíssima, que tem como base um dos arcos de personagem mais 
-    complexos já escritos. O episódio usa dos recursos da animação para criar lindas abstrações das camadas mais profundas do 
-    protagonista, o que faz dele uma das obras mais lindas e mais tristes que já vi.
-    
-    *A Vista da Metade pra Baixo* é a obra-prima que conclui o que é, pra mim, uma das melhores construções de personagem de todos os tempos.
-""")
+    st.markdown("""
+        **The View From Halfway Down**
+        
+        Após seis temporadas com a construção do personagem de Bojack, momentos profundamente devastadores e estopins inimagináveis, 
+        temos o episódio mais bem escrito, na minha opinião, da história da televisão: **"A Vista da Metade pra Baixo"**, o penúltimo 
+        episódio de *Bojack Horseman*.
+        
+        Ele tem como cenário a mente do protagonista, e se trata de um jantar de Bojack com Beatrice (sua mãe), Sarah Linn, Secretariat 
+        - seu ídolo de infância, que nesse cenário parece representar seu pai, Butterscotch - e outros personagens cruciais na série, 
+        que obviamente, foram desenvolvidos exaustivamente ao longo das temporadas.
+        
+        Tentar descrever *A Vista da Metade pra Baixo* é uma tarefa impossível, porque o episódio não acontece sozinho: ele é o cume de 
+        tudo construído na série. É uma conclusão dolorida, brilhante e belíssima, que tem como base um dos arcos de personagem mais 
+        complexos já escritos. O episódio usa dos recursos da animação para criar lindas abstrações das camadas mais profundas do 
+        protagonista, o que faz dele uma das obras mais lindas e mais tristes que já vi.
+        
+        *A Vista da Metade pra Baixo* é a obra-prima que conclui o que é, pra mim, uma das melhores construções de personagem de todos os tempos.
+    """)
 
 st.divider()
 st.markdown("""
