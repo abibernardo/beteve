@@ -208,7 +208,7 @@ Pessoalmente, apenas três séries me arrancaram risadas genuínas com frequênc
     st.markdown("""
     Não há nuances, nem entrelinhas carregadas. São diálogos diretos e escrachados entre personagens igualmente diretos e escrachados. E de alguma forma, a série consegue ser tão espetacular quanto _Arrested Development_.
     
-    E que belo testamento à diversidade da comédia: a narrativa sofisticada de _Arrested Development_ torna ideias bobas hilárias, enquanto a narrativa boba de _Trailer Park Boys_ produz ideias hilárias sofisticadas. São séries absolutamente geniais que ocupam os extremos de um espectro amplo e divertido que temos a sorte de poder explorar - cujo exato centro é _Community_.
+    Que belo testamento à diversidade da comédia: a narrativa sofisticada de _Arrested Development_ torna ideias bobas hilárias, enquanto a narrativa boba de _Trailer Park Boys_ produz ideias hilárias sofisticadas. São séries absolutamente geniais que ocupam os extremos de um espectro amplo e divertido que temos a sorte de poder explorar - cujo exato centro é _Community_.
     """)
 st.divider()
 st.markdown("""
