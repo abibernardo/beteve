@@ -147,6 +147,66 @@ st.divider()
 st.markdown("""
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0;">
         <div>
+            <h3><b>De Arrested Development a Trailer Park Boys:</b> extremos do humor</h3>
+        </div>
+        <div>
+            <img src="https://i.redd.it/go5k1vzo586b1.jpg" 
+            style="width: 250px; height: auto; margin-left: 20px;">
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
+
+st.write("")
+if st.button("Ler mais", key='comedia'):
+    st.markdown("""
+O que te faz dar risada? Trocadilhos, Hamilton, vídeo-cassetadas ou o Danilo Gentili?
+
+São poucas as coisas mais relativas do que o humor, e por isso a comédia é um estilo tão delicado de se trabalhar. Para cada série genuinamente engraçada, vão-se cem fracassos varridos para debaixo do tapete pelas plataformas de streamings. Existem muitas comédias boas, mas qual foi a última que te fez gargalhar?
+
+Pessoalmente, apenas três séries me arrancaram risadas genuínas com frequência. Nesse texto, quero falar das diferenças e semelhanças entre duas delas: _Arrested Development_ (2003-2005) e _Trailer Park Boys_ (2001-2007).
+""")
+
+st.image("https://vodzilla.co/wp-content/uploads/2013/05/arresteddevelopmentseason1-700x325.jpg")
+
+st.markdown("""
+**ARRESTED DEVELOPMENT E SUTILEZAS**
+
+_It's called an 'illusion', Michael. A 'trick' is what a whore does for money._
+
+No período pré-streaming, as séries de televisão - especialmente comédias - não eram acompanhadas pelo público com tanta linearidade. A audiência dependia do dia da semana e do horário, episódios eram assistidos fora de ordem, e era mais difícil acompanhar 100% de um programa.
+
+É claro que isso não era um problema para _Friends_, _Sex and the City_ e _Everybody Loves Raymond_, pois as séries eram construídas exatamente para este tipo de audiência. Qualquer episódio pode ser assistido a qualquer momento, sem efeito nenhum na efetividade do humor.
+
+Esse não era o caso de _Arrested Development_. As piadas são construídas ao longo dos episódios, e até das temporadas. A genialidade está, quase sempre, nas entrelinhas. Os momentos verdadeiramente hilários da série - que são MUITOS - acontecem na sutileza das relações entre os personagens.
+
+Uma explosão de raiva de Buster, por exemplo, não tem valor. Mas dado o contexto da sua relação de submissão com a mãe (icônica Lucille), me fez gargalhar **histericamente**. As piadas não são requintadas, mas certamente são construídas de forma sofisticada. Sua vanguarda trouxe simultaneamente dezenas de prêmios, um Emmy de Melhor Comédia e o cancelamento por falta de audiência.
+
+_'Se isso é um criticismo velado sobre mim, não vou validar e nem responder!'_
+""")
+
+st.markdown("""
+**TRAILER PARK BOYS E ATROPELAMENTOS**
+
+Uma câmera de baixíssima qualidade seguindo dois amigos de infância que acabaram de sair da cadeia e estão retornando à comunidade de trailers em que moram. Essa é a premissa da série _Trailer Park Boys_, que contém a diversidade de personagens mais hilária de todos os tempos.
+
+As pessoas que vivem nessa comunidade são quase todas caricaturadas. Rick é um brutamonte que atira em tudo que se move. Jullian quer ser empreendedor, e está sempre (**sempre.**) com um copo de whisky na mão. Bubbles é apaixonado por gatos e rouba carrinhos de supermercado para sobreviver. Lahey é o supervisor alcoólatra do parque, casado com seu auxiliar Randy (que é literalmente alérgico a camisetas).
+
+A mistura dessas figuras, os embates causados pelos seus exacerbados traços de personalidade e a química entre os personagens torna _Trailer Park Boys_ uma das séries mais hilárias que já tive o prazer de assistir.
+
+_Fuck, I missed jail this year. Was it awesome?_
+""")
+
+st.image("https://www.indiewire.com/wp-content/uploads/2014/03/trailer-park-boys.jpg")
+
+st.markdown("""
+Não há nuances, nem entrelinhas carregadas. São diálogos diretos e escrachados entre personagens igualmente diretos e escrachados. E de alguma forma, a série consegue ser tão espetacular quanto _Arrested Development_.
+
+E que belo testamento à diversidade da comédia: a narrativa sofisticada de _Arrested Development_ torna ideias bobas hilárias, enquanto a narrativa boba de _Trailer Park Boys_ produz ideias hilárias sofisticadas. São séries absolutamente geniais que ocupam os extremos de um espectro amplo e divertido que temos a sorte de poder explorar - cujo exato centro é _Community_.
+""")
+st.divider()
+st.markdown("""
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0;">
+        <div>
             <h3><b>Sobre Bojack Horseman: Um personagem da metade pra baixo</b> </h3>
         </div>
         <div>
