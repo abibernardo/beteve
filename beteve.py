@@ -151,7 +151,7 @@ st.markdown("""
         </div>
         <div>
             <img src="https://medias.spotern.com/spots/w640/194/194928-1555692527.jpg" 
-            style="width: 350px; height: auto; margin-left: 20px;">
+            style="width: 500px; height: auto; margin-left: 20px;">
         </div>
     </div>
     """, unsafe_allow_html=True)
