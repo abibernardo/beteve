@@ -166,7 +166,7 @@ São poucas as coisas mais relativas do que o humor, e por isso a comédia é um
 Pessoalmente, apenas três séries me arrancaram risadas genuínas com frequência. Nesse texto, quero falar das diferenças e semelhanças entre duas delas: _Arrested Development_ (2003-2005) e _Trailer Park Boys_ (2001-2007).
 """)
     st.image(
-    "https://vodzilla.co/wp-content/uploads/2013/05/arresteddevelopmentseason1-700x325.jpg",
+    "https://miro.medium.com/v2/resize:fit:2000/0*JC8koPijskjpITS-.jpg",
     caption="Arrested Development",
     width=400  
 )
