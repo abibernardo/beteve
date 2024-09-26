@@ -234,14 +234,11 @@ if st.button("Ler mais", key='Bojack'):
     *Bojack Horseman* começa exatamente assim. O protagonista - que dá nome à série - é a estrela de meia idade de um sitcom 
     dos anos 90. A série começa quando Diane - uma escritora trabalhando na biografia de Bojack - passa a entrevistá-lo para 
     o conhecer melhor. Bojack é apresentado como alguém errático e egocêntrico que age sempre prezando pela sua imagem, com 
-    atitudes maldosas e manipulativas com as pessoas ao seu redor. Nesse início, tudo parece ser leve, e todas essas 
-    características problemáticas do protagonista são mascaradas como piadas e, aparentemente, ignoradas por todos. 
-    O foco da série parece ser trocadilhos com animais e sub-enredos bobos em cada episódio.
+    atitudes descuidadas e manipulativas com as pessoas ao seu redor. Nesse início, essas 
+    características problemáticas são mostradas num tom humorístico.
     
-    Porém, lentamente, o espírito da história vai se revelando: aos poucos, vamos percebendo que alguns personagens vão 
-    criando ressentimento pelo Bojack. Comentários maldosos não são cobertos por uma trilha sonora de risadas. Seu 
-    autocentrismo não é mais visto como piada. Pedidos de desculpas acabam não sendo aceitos. Uma atitude egocêntrica não 
-    é simplesmente esquecida no episódio seguinte. Essa é a característica que, ao longo dos episódios da primeira 
+    Porém, lentamente, o espírito da história vai se revelando: vamos percebendo que alguns personagens criam ressentimento pelo Bojack. Comentários maldosos não são cobertos por uma trilha sonora de risadas. Seu 
+    autocentrismo não é mais visto como piada. Pedidos de desculpas acabam não sendo aceitos. Uma atitude egocêntrica é relembrada. Essa é a característica que, ao longo dos episódios da primeira 
     temporada, nos mostra que não estamos assistindo aos *Simpsons*, ou a *How I Met Your Mother*, ou a *Friends*: 
     **uma confiança quebrada, continua quebrada no episódio seguinte**.
     
