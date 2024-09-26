@@ -151,7 +151,7 @@ st.markdown("""
         </div>
         <div>
             <img src="https://medias.spotern.com/spots/w640/194/194928-1555692527.jpg" 
-            style="width: 250px; height: auto; margin-left: 20px;">
+            style="width: 350px; height: auto; margin-left: 20px;">
         </div>
     </div>
     """, unsafe_allow_html=True)
@@ -165,8 +165,11 @@ São poucas as coisas mais relativas do que o humor, e por isso a comédia é um
 
 Pessoalmente, apenas três séries me arrancaram risadas genuínas com frequência. Nesse texto, quero falar das diferenças e semelhanças entre duas delas: _Arrested Development_ (2003-2005) e _Trailer Park Boys_ (2001-2007).
 """)
-
-    st.image("https://vodzilla.co/wp-content/uploads/2013/05/arresteddevelopmentseason1-700x325.jpg")
+    st.image(
+    "https://vodzilla.co/wp-content/uploads/2013/05/arresteddevelopmentseason1-700x325.jpg",
+    caption="Arrested Development",
+    width=200  
+)
     
     st.markdown("""
     **ARRESTED DEVELOPMENT E SUTILEZAS**
@@ -195,8 +198,12 @@ Pessoalmente, apenas três séries me arrancaram risadas genuínas com frequênc
     
     _Fuck, I missed jail this year. Was it awesome?_
     """)
-    
-    st.image("https://www.indiewire.com/wp-content/uploads/2014/03/trailer-park-boys.jpg")
+    st.image(
+    "https://www.indiewire.com/wp-content/uploads/2014/03/trailer-park-boys.jpg",
+    caption="Julian, Bubbles e Rick",
+    width=200  
+)
+
     
     st.markdown("""
     Não há nuances, nem entrelinhas carregadas. São diálogos diretos e escrachados entre personagens igualmente diretos e escrachados. E de alguma forma, a série consegue ser tão espetacular quanto _Arrested Development_.
