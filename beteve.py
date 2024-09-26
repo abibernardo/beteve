@@ -218,7 +218,7 @@ st.divider()
 st.markdown("""
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0;">
         <div>
-            <h3><b>Sobre Baby Reindeer: O espectro da Sinceridade na arte</b> </h3>
+            <h3><b>Sobre Baby Reindeer: O espectro da sinceridade na arte</b> </h3>
         </div>
         <div>
             <img src="https://media.glamour.com/photos/661d39dd2bf771e1378d3e83/master/w_2560%2Cc_limit/BABY%2520REINDEER%2520280324%2520Baby_Reindeer_n_S1_E2_00_20_42_07.png%2CBaby_Reindeer_n_S1_E2_00_20_42_07.jpg" 
@@ -253,8 +253,10 @@ if st.button("Ler mais", key='Beberena'):
 
         A sensação é de estar assistindo a uma confissão, ou a conclusão de uma sessão de terapia. 
         O que inicialmente parece ser uma série visualmente sem graça e com uma narração desestimulante, se desenrola em um inesperado soco no estômago. 
-        A narrativa rapidamente se afasta de algo mais teatral, e torna-se um desabafo direto. Richard Gadd não conta a história com a maestria de um bom escritor, 
-        mas reflete sobre os abusos que sofreu, destrincha os seus fracassos e admite fantasias sombrias de uma forma tão crua, dolorida e confessional que torna 
+        Após os primeiros episodios, há uma mudança sutil na narrativa: ela se afasta de algo um pouco mais subjetivo, e torna-se um desabafo direto. Por isso, quando Richard Gadd vai para lugares mais sombrios, sua honestidade bruta nos leva junto.
+        
+        A história não é contada com a maestria de um bom escritor, e seu visual não chama a atenção.
+        Mas o criador reflete sobre os abusos que sofreu, destrincha os seus fracassos e admite fantasias sombrias de uma forma tão crua, dolorida e confessional que torna 
         **Bebê Rena** algo especial.
     """)
 st.divider()
