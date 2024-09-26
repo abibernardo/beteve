@@ -168,7 +168,7 @@ Pessoalmente, apenas três séries me arrancaram risadas genuínas com frequênc
     st.image(
     "https://vodzilla.co/wp-content/uploads/2013/05/arresteddevelopmentseason1-700x325.jpg",
     caption="Arrested Development",
-    width=200  
+    width=400  
 )
     
     st.markdown("""
@@ -201,7 +201,7 @@ Pessoalmente, apenas três séries me arrancaram risadas genuínas com frequênc
     st.image(
     "https://www.indiewire.com/wp-content/uploads/2014/03/trailer-park-boys.jpg",
     caption="Julian, Bubbles e Rick",
-    width=200  
+    width=400  
 )
 
     
