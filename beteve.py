@@ -223,61 +223,6 @@ st.markdown("""
     </div>
     """, unsafe_allow_html=True)
 
-#st.write("")
-#if st.button("Ler mais", key='Bojack'):
-    #st.markdown("""
-    Em *Simpsons*, Homer pode cometer um erro na usina nuclear e reduzir toda a cidade a pó, e no próximo episódio, 
-    Springfield estará inteira novamente. Em *How I Met Your Mother*, Barney pode chatear a Lilly profundamente com algum 
-    comentário machista, mas no próximo episódio, tudo será esquecido. Esse é o Status Quo que sitcoms garantem a sua 
-    audiência - haja o que houver, estará tudo bem no próximo episódio. Esse é o conforto que somos prometidos.
-    
-    *Bojack Horseman* começa exatamente assim. O protagonista - que dá nome à série - é a estrela de meia idade de um sitcom 
-    dos anos 90. A série começa quando Diane - uma escritora trabalhando na biografia de Bojack - passa a entrevistá-lo para 
-    o conhecer melhor. Bojack é apresentado como alguém errático e egocêntrico que age sempre prezando pela sua imagem, com 
-    atitudes descuidadas e manipulativas com as pessoas ao seu redor. Nesse início, essas 
-    características problemáticas são mostradas num tom humorístico.
-    
-    Porém, lentamente, o espírito da história vai se revelando: vamos percebendo que alguns personagens criam ressentimento pelo Bojack. Comentários maldosos não são cobertos por uma trilha sonora de risadas. Seu 
-    autocentrismo não é mais visto como piada. Pedidos de desculpas acabam não sendo aceitos. Uma atitude egocêntrica é relembrada. Essa é a característica que, ao longo dos episódios da primeira 
-    temporada, nos mostra que não estamos assistindo aos *Simpsons*, ou a *How I Met Your Mother*, ou a *Friends*: 
-    **uma confiança quebrada, continua quebrada no episódio seguinte**.
-    
-    Conforme as atitudes de Bojack desgastam seus relacionamentos, a série se preocupa em analisar as raízes desses traços 
-    tóxicos, trazendo uma contextualização profunda da infância, adolescência e início da vida adulta do protagonista. 
-    E quando digo "contextualização", não estou me referindo a uma simples menção. Os traumas de Bojack não são mostrados 
-    em flashbacks, ou em um episódio especial, ou contidos num desabafo. Essa contextualização é o estômago da história, 
-    e crucial para o verdadeiro objetivo da série.
-    
-    *Bojack Horseman* é sobre causa e efeito. É um estudo sobre como nossos traumas formam padrões complexos de comportamento, 
-    e como nossos relacionamentos são infectados por eles. Mais do que isso, é sobre o que podemos fazer para melhorar.
-    
-    Ao longo de seis densas temporadas, acompanhamos como Bojack lida com seus relacionamentos passados e presentes, e 
-    assistimos o dano se acumular. Não existe botão de reiniciar, a dor não desaparece no episódio seguinte, e algumas 
-    coisas são irreversíveis.
-""")
-
-    #st.image("https://static1.srcdn.com/wordpress/wp-content/uploads/2020/03/BoJack-on-Phone-and-Black-Goo-Cropped.jpg",
-             caption="'The View From Halfway Down'")
-    
-    #st.markdown("""
-        **The View From Halfway Down**
-        
-        Após seis temporadas com a construção do personagem de Bojack, momentos profundamente devastadores e estopins inimagináveis, 
-        temos o episódio mais bem escrito, na minha opinião, da história da televisão: **"A Vista da Metade pra Baixo"**, o penúltimo 
-        episódio de *Bojack Horseman*.
-        
-        Ele tem como cenário a mente do protagonista, e se trata de um jantar de Bojack com Beatrice (sua mãe), Sarah Linn, Secretariat 
-        (seu ídolo de infância, que nesse cenário parece representar seu pai, Butterscotch) e outros personagens cruciais na série, 
-        que foram desenvolvidos exaustivamente ao longo das temporadas.
-        
-        Tentar descrever *A Vista da Metade pra Baixo* é uma tarefa impossível, porque o episódio não acontece sozinho: ele é o cume de 
-        tudo construído na série. É uma conclusão dolorida, brilhante e belíssima, que tem como base um dos arcos de personagem mais 
-        complexos já escritos. O episódio usa dos recursos da animação para criar lindas abstrações das camadas mais profundas do 
-        protagonista, o que faz dele uma das obras mais lindas e mais tristes que já vi.
-        
-        *A Vista da Metade pra Baixo* é a obra-prima que conclui o que é, pra mim, uma das melhores construções de personagem de todos os tempos.
-    """)
-
 st.divider()
 st.markdown("""
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0;">
