@@ -211,8 +211,6 @@ Pessoalmente, apenas três séries me arrancaram risadas genuínas com frequênc
     Que belo testamento à diversidade da comédia: a narrativa sofisticada de _Arrested Development_ torna ideias bobas hilárias, enquanto a narrativa boba de _Trailer Park Boys_ produz ideias hilárias sofisticadas. São séries absolutamente geniais que ocupam os extremos de um espectro amplo e divertido que temos a sorte de poder explorar - cujo exato centro é _Community_.
     """)
 st.divider()
-
-st.divider()
 st.markdown("""
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0;">
         <div>
