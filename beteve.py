@@ -223,9 +223,9 @@ st.markdown("""
     </div>
     """, unsafe_allow_html=True)
 
-st.write("")
-if st.button("Ler mais", key='Bojack'):
-    st.markdown("""
+#st.write("")
+#if st.button("Ler mais", key='Bojack'):
+    #st.markdown("""
     Em *Simpsons*, Homer pode cometer um erro na usina nuclear e reduzir toda a cidade a pó, e no próximo episódio, 
     Springfield estará inteira novamente. Em *How I Met Your Mother*, Barney pode chatear a Lilly profundamente com algum 
     comentário machista, mas no próximo episódio, tudo será esquecido. Esse é o Status Quo que sitcoms garantem a sua 
@@ -256,10 +256,10 @@ if st.button("Ler mais", key='Bojack'):
     coisas são irreversíveis.
 """)
 
-    st.image("https://static1.srcdn.com/wordpress/wp-content/uploads/2020/03/BoJack-on-Phone-and-Black-Goo-Cropped.jpg",
+    #st.image("https://static1.srcdn.com/wordpress/wp-content/uploads/2020/03/BoJack-on-Phone-and-Black-Goo-Cropped.jpg",
              caption="'The View From Halfway Down'")
     
-    st.markdown("""
+    #st.markdown("""
         **The View From Halfway Down**
         
         Após seis temporadas com a construção do personagem de Bojack, momentos profundamente devastadores e estopins inimagináveis, 
