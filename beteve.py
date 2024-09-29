@@ -1,23 +1,86 @@
 import streamlit as st
 
-#st.markdown("""
-    #<h1 style='text-align: center; font-size: 60px; font-family: Palatino;'>
-      #  BETEVÊ
-    #</h1>
-    #""", unsafe_allow_html=True)
-
-# Exibindo a imagem logo abaixo do título
 st.markdown("""
-    <div style='text-align: center;'>
-        <img src="https://a.ltrbxd.com/resized/avatar/upload/5/5/2/6/7/6/8/shard/avtr-0-1000-0-1000-crop.jpg?v=a29facdc3c" 
-        style="width: 150px;">
-    </div>
-    """, unsafe_allow_html=True)
+<h1 style='text-align: center; font-size: 60px; font-family: Palatino;'>
+BETEVÊ
+</h1>
+""", unsafe_allow_html=True)
+st.divider()
+# Exibindo a imagem logo abaixo do título
+col1, col2, col3 = st.columns(3)
+
+with col1:
+    st.markdown("""
+        <div style='text-align: center;'>
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT_QyOJeldPSl2Afu4VYYKYpeOHC7GMbWxftw&s" 
+            style="width: 300px; height: 350px; object-fit: cover;">
+        </div>
+        """, unsafe_allow_html=True)
+    st.write(" ")
+    st.markdown("""
+                <div style='text-align: center;'>
+                    <img src="https://baxterandthebear.com/cdn/shop/products/successionpreview_400x.jpg?v=1648683927" 
+                    style="width: 300px; height: 350px; object-fit: cover;">
+                </div>
+                """, unsafe_allow_html=True)
+    st.write(" ")
+    st.markdown("""
+                    <div style='text-align: center;'>
+                        <img src="https://cdn11.bigcommerce.com/s-yzgoj/images/stencil/1280x1280/products/2898769/5925501/MOVGB42273__95963.1679574735.jpg?c=2" 
+                        style="width: 300px; height: 350px; object-fit: cover;">
+                    </div>
+                    """, unsafe_allow_html=True)
+with col2:
+    st.markdown("""
+        <div style='text-align: center;'>
+            <img src="https://m.media-amazon.com/images/M/MV5BMjA0NTUxMjY1OV5BMl5BanBnXkFtZTcwNjI2OTMzMQ@@._V1_QL75_UY281_CR0,0,190,281_.jpg" 
+            style="width: 300px; height: 350px; object-fit: cover;">
+        </div>
+        """, unsafe_allow_html=True)
+    st.write(" ")
+    st.markdown("""
+            <div style='text-align: center;'>
+                <img src="https://down-br.img.susercontent.com/file/br-11134207-7qukw-liisz1wf8sadfe" 
+                style="width: 300px; height: 350px; object-fit: cover;">
+            </div>
+            """, unsafe_allow_html=True)
+    st.write(" ")
+    st.markdown("""
+                    <div style='text-align: center;'>
+                        <img src="https://m.media-amazon.com/images/M/MV5BOGIwYzNmYTktZWExZC00MzAyLTk4NTItODgwZmIyNWZhNDEyXkEyXkFqcGc@._V1_.jpg" 
+                        style="width: 300px; height: 350px; object-fit: cover;">
+                    </div>
+                    """, unsafe_allow_html=True)
+
+with col3:
+    st.markdown("""
+        <div style='text-align: center;'>
+            <img src="https://br.web.img2.acsta.net/pictures/22/02/17/22/59/4379186.jpg" 
+            style="width: 300px; height: 350px; object-fit: cover;">
+        </div>
+        """, unsafe_allow_html=True)
+    st.write(" ")
+    st.markdown("""
+            <div style='text-align: center;'>
+                <img src="https://resizing.flixster.com/-XZAfHZM39UwaGJIFWKAE8fS0ak=/v3/t/assets/p24090_v_v10_ag.jpg" 
+                style="width: 300px; height: 350px; object-fit: cover;">
+            </div>
+            """, unsafe_allow_html=True)
+    st.write(" ")
+    st.markdown("""
+                    <div style='text-align: center;'>
+                        <img src="https://m.media-amazon.com/images/M/MV5BMTQ1MTY2MTY2Nl5BMl5BanBnXkFtZTcwMDg1ODYwNA@@._V1_.jpg" 
+                        style="width: 300px; height: 350px; object-fit: cover;">
+                    </div>
+                    """, unsafe_allow_html=True)
+
+
 st.write("   ")
+st.divider()
 st.write("   ")
 st.markdown("""
     <h1 style='text-align: center; font-size: 30px; font-family: Palatino;'>
-        Opiniões, críticas, elogios e palpites sobre o melhor e o pior da televisão
+        Opiniões, críticas, elogios e palpites sobre televisão
     </h1>
     """, unsafe_allow_html=True)
 st.divider()
@@ -28,7 +91,7 @@ st.markdown("""
         </div>
         <div>
             <img src="https://s2.glbimg.com/aVCeHUpHz-sfAESOQfK_uNwjDE0=/smart/e.glbimg.com/og/ed/f/original/2014/10/07/meanwhile.jpg" 
-            style="width: 250px; height: auto; margin-left: 20px;">
+            style="width: 250px; height: 180px; margin-left: 20px;">
         </div>
     </div>
     """, unsafe_allow_html=True)
@@ -65,11 +128,10 @@ if st.button("Ler mais", key='Laura'):
     """)
 
     st.image(
-    "https://static.wikia.nocookie.net/twinpeaks/images/0/0f/MFAPsitting.jpg",
-    caption="'The Man from Another Place'",
-    width=400  
-)
-
+        "https://static.wikia.nocookie.net/twinpeaks/images/0/0f/MFAPsitting.jpg",
+        caption="'The Man from Another Place'",
+        width=400
+    )
 
     st.markdown("""
         **AS CAMADAS**
@@ -105,7 +167,7 @@ if st.button("Ler mais", key='hacks'):
 
         Após dois Emmys de Melhor Roteiro em suas duas primeiras temporadas, os criadores Lucia Aniello, Paul W. Downs (Jimmy!) 
         e Jen Statsky finalmente venceram o prêmio principal com uma espetacular terceira temporada, 
-        juntamente com seu terceiro Emmy de Melhor Roteiro com o episódio **mais bem avaliado da história da série** _Bulletproof_.
+        juntamente com seu terceiro Emmy de Melhor Roteiro com o episódio **mais bem avaliado da história da série**, _Bulletproof_.
 
         Isso é espantoso. Como uma série que teve que se reinventar em TODAS as transições de temporada, não só conseguiu 
         manter seu prestígio, como elevou o nível? E o quão difícil isso é?
@@ -151,7 +213,7 @@ st.markdown("""
         </div>
         <div>
             <img src="https://medias.spotern.com/spots/w640/194/194928-1555692527.jpg" 
-            style="width: 500px; height: auto; margin-left: 20px;">
+            style="width: 450px; height: 200; margin-left: 20px;">
         </div>
     </div>
     """, unsafe_allow_html=True)
@@ -166,48 +228,47 @@ São poucas as coisas mais relativas do que o humor, e por isso a comédia é um
 Pessoalmente, apenas três séries me arrancaram risadas genuínas com frequência. Nesse texto, quero falar das diferenças e semelhanças entre duas delas: _Arrested Development_ (2003-2005) e _Trailer Park Boys_ (2001-2007).
 """)
     st.image(
-    "https://miro.medium.com/v2/resize:fit:2000/0*JC8koPijskjpITS-.jpg",
-    caption="Arrested Development",
-    width=400  
-)
-    
+        "https://miro.medium.com/v2/resize:fit:2000/0*JC8koPijskjpITS-.jpg",
+        caption="Arrested Development",
+        width=400
+    )
+
     st.markdown("""
     **ARRESTED DEVELOPMENT E SUTILEZAS**
-    
+
     _It's called an 'illusion', Michael. A 'trick' is what a whore does for money._
-    
+
     No período pré-streaming, as séries de televisão - especialmente comédias - não eram acompanhadas pelo público com tanta linearidade. A audiência dependia do dia da semana e do horário, episódios eram assistidos fora de ordem, e era mais difícil acompanhar 100% de um programa.
-    
+
     É claro que isso não era um problema para _Friends_, _Sex and the City_ e _Everybody Loves Raymond_, pois as séries eram construídas exatamente para este tipo de audiência. Qualquer episódio pode ser assistido a qualquer momento, sem efeito nenhum na efetividade do humor.
-    
+
     Esse não era o caso de _Arrested Development_. As piadas são construídas ao longo dos episódios, e até das temporadas. A genialidade está, quase sempre, nas entrelinhas. Os momentos verdadeiramente hilários da série - que são MUITOS - acontecem na sutileza das relações entre os personagens.
-    
+
     Uma explosão de raiva de Buster, por exemplo, não tem valor. Mas dado o contexto da sua relação de submissão com a mãe (icônica Lucille), me fez gargalhar **histericamente**. As piadas não são requintadas, mas certamente são construídas de forma sofisticada. Sua vanguarda trouxe simultaneamente dezenas de prêmios, um Emmy de Melhor Comédia e o cancelamento por falta de audiência.
-    
+
     _'Se isso é um criticismo velado sobre mim, não vou validar e nem responder!'_
     """)
-    
+
     st.markdown("""
     **TRAILER PARK BOYS E ATROPELAMENTOS**
-    
+
     Uma câmera de baixíssima qualidade seguindo dois amigos de infância que acabaram de sair da cadeia e estão retornando à comunidade de trailers em que moram. Essa é a premissa da série _Trailer Park Boys_, que contém a diversidade de personagens mais hilária de todos os tempos.
-    
+
     As pessoas que vivem nessa comunidade são quase todas caricaturadas. Rick é um brutamonte que atira em tudo que se move. Jullian quer ser empreendedor, e está sempre (**sempre.**) com um copo de whisky na mão. Bubbles é apaixonado por gatos e rouba carrinhos de supermercado para sobreviver. Lahey é o supervisor alcoólatra do parque, casado com seu auxiliar Randy (que é literalmente alérgico a camisetas).
-    
+
     A mistura dessas figuras, os embates causados pelos seus exacerbados traços de personalidade e a química entre os personagens torna _Trailer Park Boys_ uma das séries mais hilárias que já tive o prazer de assistir.
-    
+
     _Fuck, I missed jail this year. Was it awesome?_
     """)
     st.image(
-    "https://www.indiewire.com/wp-content/uploads/2014/03/trailer-park-boys.jpg",
-    caption="Julian, Bubbles e Rick",
-    width=400  
-)
+        "https://www.indiewire.com/wp-content/uploads/2014/03/trailer-park-boys.jpg",
+        caption="Julian, Bubbles e Rick",
+        width=400
+    )
 
-    
     st.markdown("""
     Não há nuances, nem entrelinhas carregadas. São diálogos diretos e escrachados entre personagens igualmente diretos e escrachados. E de alguma forma, a série consegue ser tão espetacular quanto _Arrested Development_.
-    
+
     Que belo testamento à diversidade da comédia: a narrativa sofisticada de _Arrested Development_ torna ideias bobas hilárias, enquanto a narrativa boba de _Trailer Park Boys_ produz ideias hilárias sofisticadas. São séries absolutamente geniais que ocupam os extremos de um espectro amplo e divertido que temos a sorte de poder explorar - cujo exato centro é _Community_.
     """)
 st.divider()
@@ -231,7 +292,7 @@ if st.button("Ler mais", key='Beberena'):
 
         Ser sincero não é sinônimo de ser literal - uma obra de ficção científica como _Watchmen_ ou um filme completamente abstrato 
         como _Eraserhead_ podem ser profundamente sinceros, enquanto documentários como _The Last Dance_ ou filmes biográficos como 
-        _Boyhood_ podem ser totalmente cínicos ou superficiais. É abstrato, mas eu, pessoalmente, consigo identificar se o que assisto 
+        _Boyhood_ podem ser cínicos e superficiais. É abstrato, mas eu, pessoalmente, consigo identificar se o que assisto 
         é sincero ou não imediatamente - mesmo que não saiba muito bem explicar o porquê.
 
         A maioria das séries de prestígio, são sinceras, e a maioria das séries medianas, são superficiais. 
@@ -247,27 +308,24 @@ if st.button("Ler mais", key='Beberena'):
         A história é baseada em situações de abuso reais que o criador, escritor e protagonista Richard Gadd passou, 
         e digo com segurança que nunca vi nada igual.
 
-        A sensação é de estar assistindo a uma confissão, ou a conclusão de uma sessão de terapia. 
+        A sensação é de estar assistindo a uma confissão, ou a conclusão de sessões de terapia. 
         O que inicialmente parece ser uma série visualmente sem graça e com uma narração desestimulante, se desenrola em um inesperado soco no estômago. 
-        Após os primeiros episodios, há uma mudança sutil na narrativa: ela se afasta de algo um pouco mais subjetivo, e torna-se um desabafo direto. Por isso, quando Richard Gadd vai para lugares mais sombrios, sua honestidade bruta nos leva junto.
-        
+        Após os primeiros episódios, há uma mudança sutil na narrativa: ela se afasta de algo um pouco mais subjetivo, e torna-se um desabafo direto. Por isso, quando Richard Gadd vai para lugares mais sombrios, sua honestidade bruta nos leva com ele.
+
         A história não é contada com a maestria de um bom escritor, e seu visual não chama a atenção.
-        Mas o criador reflete sobre os abusos que sofreu, destrincha os seus fracassos e admite fantasias sombrias de uma forma tão crua, dolorida e confessional que torna 
+        Mas o criador reflete sobre os abusos que sofreu, destrincha os seus fracassos e admite fantasias sombrias de uma forma tão crua, dolorosa e confessional que torna 
         **Bebê Rena** algo especial.
     """)
 st.divider()
 
-
-#ticker = st.sidebar.selectbox("Seções", tickers)
-
-
-#st.title("Olá!!!")
+# ticker = st.sidebar.selectbox("Seções", tickers)
 
 
+# st.title("Olá!!!")
 
-#st.header("Orientações:")
-#st.markdown("""Quero colocar o máximo de análises possível, e de alguma forma colocar a opção de recebeer novos dados dos preditores para fazer predições da variavel resposta. Se vira, amigão! Algo importante é: seria legal adicionar um recurso de salvar novos objetos durante a análise. EX: salvar os ACP numa matriz para depois fazer a MANOVA.
-     #   """)
 
+# st.header("Orientações:")
+# st.markdown("""Quero colocar o máximo de análises possível, e de alguma forma colocar a opção de recebeer novos dados dos preditores para fazer predições da variavel resposta. Se vira, amigão! Algo importante é: seria legal adicionar um recurso de salvar novos objetos durante a análise. EX: salvar os ACP numa matriz para depois fazer a MANOVA.
+#   """)
 
 
