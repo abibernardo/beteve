@@ -36,7 +36,6 @@ with col01:
 
 lideres = LeagueLeaders(per_mode48='PerGame', season_type_all_star='Regular Season', stat_category_abbreviation=stat_lider)
 df_lider = lideres.league_leaders.get_data_frame()
-st.dataframe(df_lider)
 df_lider = pl.from_pandas(df_lider)
 df_lider = df_lider.select(pl.col('RANK'), pl.col('PLAYER'), pl.col('TEAM'), pl.col(stat_lider)).head(10)
 
