@@ -67,7 +67,7 @@ st.markdown("""
 <div class="container">
     <img src="https://ih1.redbubble.net/image.4531426106.3746/flat,750x,075,f-pad,750x1000,f8f8f8.jpg" 
          alt="NBA Logo" style="width: 200px; border-radius: 10px; margin-bottom: 20px;">
-    <div class="title">NBA Stats Hub</div>
+    <div class="title">NBA Stats</div>
     <div class="subtitle">
         Bem-vindo ao site mais legal de estatísticas básicas e avançadas da NBA!
     </div>
