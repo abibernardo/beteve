@@ -55,7 +55,7 @@ if jogador_dict:
         df_carreira = pl.from_pandas(df_carreira)
         df_carreira = df_carreira.with_columns(
             pl.col("SEASON_ID").alias("temporada"),
-            pl.col("SEASON_ID").str.extract(r"^(\d+)", 1).cast(pl.Int32).alias("ano"),
+            pl.col("temporada").str.extract(r"^(\d+)", 1).cast(pl.Int32).alias("ano"),
             pl.col("TEAM_ABBREVIATION").alias("time"),
             (pl.col("PTS") / pl.col("GP")).round(1),
             (pl.col("REB") / pl.col("GP")).round(1),
