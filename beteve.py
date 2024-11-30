@@ -6,9 +6,8 @@ import pandas as pd
 import polars as pl
 import plotly.express as px
 import plotly.graph_objects as go
-st.sidebar.success("Escolha o que quer explorar!")
 
-import streamlit as st
+
 
 # Configuração da página
 st.set_page_config(
@@ -16,6 +15,7 @@ st.set_page_config(
     page_icon="🏀",
     layout="centered",
 )
+st.sidebar.success("Escolha o que quer explorar!")
 
 # Estilo personalizado para a página
 st.markdown("""
