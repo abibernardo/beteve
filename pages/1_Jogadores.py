@@ -441,7 +441,11 @@ if jogador_input:
     with col8:
         stat_temp = st.selectbox("Selecione uma estatística", stats2, key='123')
     df_jogos = df_jogos.filter(pl.col("SEASON_ID") == temp)
-    df_jogos = df_jogos.with_row_count(name="jogo").with_columns((pl.col("jogo") + 1).alias("jogo"))
+    df_jogos = (
+        df_jogos
+            .with_row_count(name="jogo")
+            .with_columns((pl.lit(df_jogos.height) - pl.col("jogo")).alias("jogo"))
+    )
     fig = px.line(df_jogos, x="jogo", y=stat_temp)
     st.plotly_chart(fig)
     st.divider()
