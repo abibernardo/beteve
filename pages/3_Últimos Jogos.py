@@ -237,21 +237,6 @@ else:
 
 st.divider()
 
-col11, col12 = st.columns(2)
-if ultimos_jogos > 1:
-    with col11:
-        stat = st.selectbox(
-                    'Estatística de interesse',
-                    stats, key='stats')
-    st.write(f"## {stat} ao longo dos últimos {ultimos_jogos} jogos")
-    fig = px.line(df_jogos, x="jogo", y=stat)
-    fig.update_layout(
-            xaxis=dict(
-            tickmode="array",  # Define os ticks manualmente
-            tickvals=df_jogos["jogo"].to_list(),))  # Usa os valores únicos da coluna 'ano'
-    st.plotly_chart(fig)
-
-st.divider()
 df_jogos_display = df_jogos.select(
         pl.col("DATA"),
         pl.col("MATCHUP"),
