@@ -3,6 +3,7 @@ from nba_api.stats.endpoints import PlayerProfileV2
 from nba_api.stats.endpoints import LeagueLeaders
 import streamlit as st
 from nba_api.stats.static import players
+from nba_api.stats.endpoints import LeagueGameFinder
 import pandas as pd
 import polars as pl
 import plotly.express as px
@@ -16,6 +17,25 @@ stats = [
     "STL",
     "BLK",
     "TOV",
+    "FG%",
+    "3 FG%",
+    "FT%",
+    "FGA",
+    "FGM",
+    "FG3A",
+    "FG3M",
+    "FTA",
+    "FTM",
+    "MIN"
+]
+stats2 = [
+    "PTS",
+    "REB",
+    "AST",
+    "STL",
+    "BLK",
+    "TOV",
+    "PLUS_MINUS",
     "FG%",
     "3 FG%",
     "FT%",
@@ -72,6 +92,41 @@ def achar_jogador(jogador_input):
             return jogador_dict, jogador_id
         except Exception as e:
             st.write("## Confira o nome do jogador.")
+
+def achar_jogo(jogador_id):
+    try:
+        # Busca jogos associados ao jogador
+        jogo = LeagueGameFinder(player_id_nullable=jogador_id, season_type_nullable = 'Regular Season')
+        df = jogo.league_game_finder_results.get_data_frame()
+    except Exception as e:
+        st.write(f"Erro ao buscar dados: {e}")
+        df = pd.DataFrame()  # DataFrame vazio em caso de erro
+    if not df.empty:
+        df_jogos = pl.from_pandas(df)
+        df_jogos = df_jogos.with_columns(
+            (pl.col("SEASON_ID").cast(pl.Int32) - 20000),
+            pl.col("GAME_DATE").alias("DATA"),
+            pl.col("WL").alias("W/L"),
+            pl.col("PTS"),
+            pl.col("REB"),
+            pl.col("AST"),
+            pl.col("STL"),
+            pl.col("BLK"),
+            pl.col("TOV"),
+            (pl.col("FG_PCT") * 100).alias("FG%"),
+            (pl.col("FG3_PCT") * 100).alias("3 FG%"),
+            (pl.col("FT_PCT") * 100).alias("FT%"),
+            pl.col("FGA"),
+            pl.col("FGM"),
+            pl.col("FG3A"),
+            pl.col("FG3M"),
+            pl.col("FTA"),
+            pl.col("FTM"),
+            pl.col("MIN")
+        ).sort("SEASON_ID")
+        return df_jogos
+    else:
+        st.write("Nenhum dado disponível para exibir.")
 
 def media_por_temporada(df_carreira):
     df_carreira = df_carreira.with_columns(
@@ -234,6 +289,7 @@ if jogador_input:
         df_carreira = pl.from_pandas(df_carreira)
         df_medias = stats_carreira.career_totals_regular_season.get_data_frame()
         df_medias = pl.from_pandas(df_medias)
+        df_jogos = achar_jogo(jogador_id)
 
         ### TRATANDO DADOS:  df_carreira = media por temporada
         df_total_carreira = total_por_temporada(df_carreira)
@@ -341,6 +397,7 @@ if jogador_input:
                 </div>
                 """.format(fg=fg_carreira, fg3=fg3_carreira, ft=ft_carreira), unsafe_allow_html=True)
     st.divider()
+    st.write("## Estatísticas ao longo da carreira")
     col1, col15, col2 = st.columns(3)
     with col1:
         stat = st.selectbox(
@@ -375,5 +432,40 @@ if jogador_input:
         st.markdown(f"<p style='font-size:18px; font-weight:bold; text-align:center;'>{total_carreira_stat} {stat} na carreira</p>", unsafe_allow_html=True)
         st.divider()
         dados_exibidos = limpar_colunas(df_total_carreira)
+    #st.dataframe(dados_exibidos)
+    st.write("## Estatísticas a cada temporada")
+    temporadas = df_jogos["SEASON_ID"].unique().to_list()
+    col7, col8 = st.columns(2)
+    with col7:
+        temp = st.selectbox("Selecione uma temporada", temporadas)
+    with col8:
+        stat_temp = st.selectbox("Selecione uma estatística", stats2, key='123')
+    df_jogos = df_jogos.filter(pl.col("SEASON_ID") == temp)
+    df_jogos = df_jogos.with_row_count(name="jogo").with_columns((pl.col("jogo") + 1).alias("jogo"))
+    fig = px.line(df_jogos, x="jogo", y=stat_temp)
+    st.plotly_chart(fig)
+    st.divider()
+    df_jogos_exibir = df_jogos.select(
+        pl.col("MATCHUP"),
+        pl.col("GAME_DATE"),
+        pl.col("WL"),
+        pl.col("PTS"),
+        pl.col("REB"),
+        pl.col("AST"),
+        pl.col("STL"),
+        pl.col("BLK"),
+        pl.col("TOV"),
+        pl.col("FG%"),
+        pl.col("3 FG%"),
+        pl.col("FT%"),
+        pl.col("DREB"),
+        pl.col("OREB"),
+        pl.col("FGA"),
+        pl.col("FGM"),
+        pl.col("FG3A"),
+        pl.col("FG3M"),
+        pl.col("FTA"),
+        pl.col("FTM"),
+        pl.col("MIN"))
     st.dataframe(dados_exibidos)
-st.divider()
+    st.dataframe(df_jogos_exibir)
