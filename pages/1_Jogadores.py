@@ -467,5 +467,5 @@ if jogador_input:
         pl.col("FTA"),
         pl.col("FTM"),
         pl.col("MIN"))
-    st.dataframe(dados_exibidos)
-    st.dataframe(df_jogos_exibir)
+    #st.dataframe(dados_exibidos)
+    #st.dataframe(df_jogos_exibir)
