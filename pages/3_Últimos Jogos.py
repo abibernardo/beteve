@@ -4,6 +4,7 @@ from nba_api.stats.endpoints import LeagueLeaders
 import streamlit as st
 from nba_api.stats.static import players
 from nba_api.stats.static import teams
+from nba_api.stats.endpoints import BoxScoreSummaryV2
 from nba_api.stats.endpoints import BoxScoreTraditionalV2
 from nba_api.stats.endpoints import LeagueGameFinder
 import pandas as pd
@@ -121,34 +122,43 @@ def achar_jogo_time(time):
     else:
         st.write("Nenhum dado disponível para exibir.")
 
+def resultado_jogo(jogo_id):
+    jogo = BoxScoreSummaryV2(game_id=jogo_id)
+    placar = jogo.line_score.get_data_frame()
+    time_a = placar.item(0, 4)
+    time_b = placar.item(1, 4)
+    pts_a = placar.item(0, 22)
+    pts_b = placar.item(1, 22)
+    return time_a, time_b, pts_a, pts_b
+
+
 
 st.title("Estatísticas dos últimos jogos")
-filtro = st.radio(" ", ["Time", "Jogador"])
+
 
 st.divider()
 
 col1, col2 = st.columns(2)
 with col1:
-    if filtro=='Jogador':
-        input = st.text_input("De que jogador você quer ver as estatísticas?")
-        if input:
-            jogador_dict, jogador_id = achar_jogador(input)
-        else:
-            jogador_dict, jogador_id = achar_jogador('harden')
-        nome = jogador_dict[0]["full_name"]
+    input = st.text_input("De que jogador você quer ver as estatísticas?")
+    if input:
+        jogador_dict, jogador_id = achar_jogador(input)
+    else:
+        jogador_dict, jogador_id = achar_jogador('harden')
+    nome = jogador_dict[0]["full_name"]
+    df_jogos = achar_jogo_jogador(jogador_id)
 
-        df_jogos = achar_jogo_jogador(jogador_id)
-    elif filtro =='Time':
-        input = st.selectbox("De que time você quer ver as estatísticas?", nba_teams_abbreviations)
-        time_id = achar_time(input)
-        df_jogos = achar_jogo_time(time_id)
 
 with col2:
     ultimos_jogos = st.number_input("Há quantos jogos?", min_value=1, step=1)
 
 
 df_jogos = df_jogos.head(ultimos_jogos)
-df_jogos = df_jogos.with_row_count(name="jogo").with_columns((pl.col("jogo") + 1).alias("jogo"))
+df_jogos = (
+        df_jogos
+            .with_row_count(name="jogo")
+            .with_columns((pl.lit(df_jogos.height) - pl.col("jogo")).alias("jogo"))
+    )
 
 
 df_jogos = df_jogos.with_columns(
@@ -198,10 +208,9 @@ stats_visual = [
 
 # Exibindo os valores no layout do Streamlit
 
-if filtro == "Jogador":
-    st.write(f'## Últimos {ultimos_jogos} jogos de {nome}')
 
-if filtro == "Jogador":
+st.write(f'## Últimos {ultimos_jogos} jogos de {nome}')
+if ultimos_jogos:
     cols = st.columns(5)
     for col, (value, label) in zip(cols, stats_visual):
         with col:
@@ -217,22 +226,6 @@ if filtro == "Jogador":
             </p>
         </div>
     """, unsafe_allow_html=True)
-else:
-    st.divider()
-    for row in df_jogos.iter_rows(named=True):
-        data = row["DATA"]
-        matchup = row["MATCHUP"]
-        win_loss = row["W/L"]
-
-        # Customizando o layout para cada linha
-        st.markdown(f"""
-            <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px; margin-bottom: 10px; border: 1px solid #ddd; border-radius: 10px;">
-                <p style="margin: 0; font-size: 18px; color: #555;"><b>Data:</b> {data}</p>
-                <p style="margin: 0; font-size: 18px; color: #555;"><b>Matchup:</b> {matchup}</p>
-                <p style="margin: 0; font-size: 18px; color: {'green' if win_loss == 'W' else 'red'};"><b>Resultado:</b> {win_loss}</p>
-            </div>
-        """, unsafe_allow_html=True)
-
 
 
 st.divider()
@@ -258,3 +251,20 @@ df_jogos_display = df_jogos.select(
         pl.col("FTM"),
         pl.col("MIN"))
 st.dataframe(df_jogos_display)
+st.divider()
+col11, col12 = st.columns(2)
+if ultimos_jogos > 1:
+    with col11:
+        stat = st.selectbox(
+                    'Estatística de interesse',
+                    stats, key='stats')
+    st.write(f"## {stat} de {nome}: {ultimos_jogos} últimos jogos")
+    fig = px.line(df_jogos, x="jogo", y=stat)
+    fig.update_layout(
+            xaxis=dict(
+            tickmode="array",  # Define os ticks manualmente
+            tickvals=df_jogos["jogo"].to_list(),))  # Usa os valores únicos da coluna 'ano'
+    st.plotly_chart(fig)
+    if stat not in ["FG%", "3 FG%", "FT%"]:
+        media = round(df_jogos_display[stat].mean(), 1)
+        st.write(f"**Média de {media}**")
