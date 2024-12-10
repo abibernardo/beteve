@@ -40,7 +40,7 @@ def achar_jogador(jogador_input):
             jogador_id = jogador_dict[0]["id"]
             return jogador_dict, jogador_id
         except Exception as e:
-            st.write("## Confira o nome do jogador.")
+            st.write(" ")
 
 
 
@@ -49,14 +49,14 @@ with col01:
                 'Quer ver o ranking de qual stat?',
                 stats2, key='stats_lider')
 with col02:
-    jogador_input = st.text_input("Quer ver o ranking de qual jogador?")
+    jogador_input = st.text_input("Quer ver o ranking de qual jogador?", placeholder="James Harden")
 
 
 if jogador_input:
     try:
         jogador_dict, jogador_id = achar_jogador(jogador_input)
     except Exception as e:
-        st.write("Confira o nome do jogador.")
+        st.write(" ")
 
 lideres = LeagueLeaders(per_mode48='PerGame', season_type_all_star='Regular Season', stat_category_abbreviation=stat_lider)
 df_lider = lideres.league_leaders.get_data_frame()
@@ -64,9 +64,12 @@ df_lider = pl.from_pandas(df_lider)
 df_lider_tela = df_lider.select(pl.col('RANK'), pl.col('PLAYER'), pl.col('TEAM'), pl.col(stat_lider)).head(10)
 
 if jogador_input:
-    df_lider_jogador = df_lider.filter(pl.col("PLAYER_ID") == jogador_id)
-    df_lider_jogador = df_lider_jogador.select(pl.col('RANK'), pl.col('PLAYER'), pl.col('TEAM'), pl.col(stat_lider)).head(10)
+    try:
+        df_lider_jogador = df_lider.filter(pl.col("PLAYER_ID") == jogador_id)
+        df_lider_jogador = df_lider_jogador.select(pl.col('RANK'), pl.col('PLAYER'), pl.col('TEAM'), pl.col(stat_lider)).head(10)
 
+    except Exception as e:
+        st.write(" ")
 # Iterar pelas linhas do DataFrame
 col01, col02 = st.columns(2)
 with col01:
@@ -82,14 +85,17 @@ with col01:
 
 # Apresentação alternativa para `df_lider_jogador` na segunda coluna
 with col02:
-    if jogador_input:  # Verificando se um jogador foi selecionado
-        for row in df_lider_jogador.iter_rows():
-            rank, player, team, stat = row  # Supondo que as colunas sejam 'rank', 'player', 'team', e 'stat'
-            st.markdown(f"""
-                            <div style="margin: 5px 0; padding: 8px; border-radius: 5px; border: 1px solid #444; background-color: #ffffff;">
-                                <strong style="color: #0056b3;">#{rank}</strong> 
-                                <span style="font-weight: bold; color: #222;">{player}</span> — 
-                                <span style="color: #555;">{team}</span>
-                                <span style="float: right; font-weight: bold; color: #d9534f;">{stat_lider}: {stat}</span>
-                            </div>
-                            """, unsafe_allow_html=True)
+    if jogador_input:
+        try:
+            for row in df_lider_jogador.iter_rows():
+                rank, player, team, stat = row  # Supondo que as colunas sejam 'rank', 'player', 'team', e 'stat'
+                st.markdown(f"""
+                                <div style="margin: 5px 0; padding: 8px; border-radius: 5px; border: 1px solid #444; background-color: #ffffff;">
+                                    <strong style="color: #0056b3;">#{rank}</strong> 
+                                    <span style="font-weight: bold; color: #222;">{player}</span> — 
+                                    <span style="color: #555;">{team}</span>
+                                    <span style="float: right; font-weight: bold; color: #d9534f;">{stat_lider}: {stat}</span>
+                                </div>
+                                """, unsafe_allow_html=True)
+        except Exception as e:
+            st.write("### Confira o nome do jogador.")
