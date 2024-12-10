@@ -232,7 +232,7 @@ def medias_carreira(df_medias):
 
 
 st.title("ANÁLISE DE JOGADORES")
-jogador_input = st.text_input("De que jogador você quer ver as estatísticas?", placeholder="James Harden")
+jogador_input = st.text_input("De que jogador você quer ver as estatísticas?", placeholder="Michael Jordan")
 show = st.radio(" ", ["POR TEMPORADA", "CARREIRA"])
 
 if jogador_input:
