@@ -385,4 +385,6 @@ elif show == "Última temporada ativa":
 
     st.plotly_chart(fig)
 
-
+if st.button("Limpar dados"):
+    for key in st.session_state.keys():
+        del st.session_state[key]
