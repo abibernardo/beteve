@@ -231,7 +231,7 @@ def medias_carreira(df_medias):
 
 
 st.title("GRÁFICO COMPARATIVO")
-st.write("**Dados relativos a última temporada ativa do jogador**")
+show = st.radio("Quais dados deseja utilizar?", ["Carreira", "Última temporada ativa"], horizontal=True)
 st.divider()
 col1, col2, col3 = st.columns(3)
 with col1:
@@ -262,7 +262,6 @@ if jogador_input:
 
         ### medias da carreira
         df_medias = medias_carreira(df_medias)
-
     except Exception as e:
         st.write(" ")
 else:
@@ -270,62 +269,120 @@ else:
 
 
 # Inicializa o DataFrame vazio no session_state, se ainda não existir
-if "dados" not in st.session_state:
-    st.session_state["dados"] = pl.DataFrame(
-        {
-            "nome": pl.Series([], dtype=pl.Utf8),
-            "PTS": pl.Series([], dtype=pl.Float64),
-            "REB": pl.Series([], dtype=pl.Float64),
-            "AST": pl.Series([], dtype=pl.Float64),
-            "STL": pl.Series([], dtype=pl.Float64),
-            "BLK": pl.Series([], dtype=pl.Float64),
-            "TOV": pl.Series([], dtype=pl.Float64),
-            "FG%": pl.Series([], dtype=pl.Float64),
-            "3 FG%": pl.Series([], dtype=pl.Float64),
-            "FT%": pl.Series([], dtype=pl.Float64),
-            "FGA": pl.Series([], dtype=pl.Float64),
-            "FGM": pl.Series([], dtype=pl.Float64),
-            "FG3A": pl.Series([], dtype=pl.Float64),
-            "FG3M": pl.Series([], dtype=pl.Float64),
-            "FTA": pl.Series([], dtype=pl.Float64),
-            "FTM": pl.Series([], dtype=pl.Float64),
-            "MIN": pl.Series([], dtype=pl.Float64),
-        }
+if show == "Carreira":
+    if "dados" not in st.session_state:
+        st.session_state["dados"] = pl.DataFrame(
+            {
+                "nome": pl.Series([], dtype=pl.Utf8),
+                "PTS": pl.Series([], dtype=pl.Float64),
+                "REB": pl.Series([], dtype=pl.Float64),
+                "AST": pl.Series([], dtype=pl.Float64),
+                "STL": pl.Series([], dtype=pl.Float64),
+                "BLK": pl.Series([], dtype=pl.Float64),
+                "TOV": pl.Series([], dtype=pl.Float64),
+                "FG%": pl.Series([], dtype=pl.Float64),
+                "3 FG%": pl.Series([], dtype=pl.Float64),
+                "FT%": pl.Series([], dtype=pl.Float64),
+                "FGA": pl.Series([], dtype=pl.Float64),
+                "FGM": pl.Series([], dtype=pl.Float64),
+                "FG3A": pl.Series([], dtype=pl.Float64),
+                "FG3M": pl.Series([], dtype=pl.Float64),
+                "FTA": pl.Series([], dtype=pl.Float64),
+                "FTM": pl.Series([], dtype=pl.Float64),
+                "MIN": pl.Series([], dtype=pl.Float64),
+            }
+        )
+
+    colunas_a_manter = [
+        "nome", "PTS", "REB", "AST", "STL", "BLK", "TOV",
+        "FG%", "3 FG%", "FT%", "FGA", "FGM", "FG3A", "FG3M", "FTA", "FTM", "MIN"
+    ]
+
+    # Entrada do jogador
+    if jogador_input:
+        try:
+            nome = jogador_dict[0]["full_name"]
+        except Exception as e:
+            st.write(" ")
+        if 'nome' in locals():
+            try:
+                dados_novos = df_medias.with_columns(pl.lit(nome).alias("nome"))
+                dados_novos = dados_novos.select(colunas_a_manter)
+                nova_linha_df = pl.DataFrame([dados_novos.row(0)], schema=colunas_a_manter)
+                st.session_state["dados"] = st.session_state["dados"].vstack(nova_linha_df)
+            except Exception as e:
+                st.write("Erro:", e)
+
+    # Exibe o DataFrame atualizado
+    df = st.session_state["dados"]
+    df = df.to_pandas()
+
+    fig = px.scatter(df, x=stat_1, y=stat_2, text='nome', log_x=True, size_max=60)
+    fig.update_traces(textposition='top center')
+
+    fig.update_layout(
+        height=400,
+        title_text='Comparação de jogadores'
     )
 
-colunas_a_manter = [
-    "nome", "PTS", "REB", "AST", "STL", "BLK", "TOV",
-    "FG%", "3 FG%", "FT%", "FGA", "FGM", "FG3A", "FG3M", "FTA", "FTM", "MIN"
-]
+    st.plotly_chart(fig)
 
-# Entrada do jogador
-if jogador_input:
-    try:
-        nome = jogador_dict[0]["full_name"]
-    except Exception as e:
-        st.write(" ")
-    if 'nome' in locals():
+elif show == "Última temporada ativa":
+    if "dados_temporada" not in st.session_state:
+        st.session_state["dados_temporada"] = pl.DataFrame(
+            {
+                "nome": pl.Series([], dtype=pl.Utf8),
+                "PTS": pl.Series([], dtype=pl.Float64),
+                "REB": pl.Series([], dtype=pl.Float64),
+                "AST": pl.Series([], dtype=pl.Float64),
+                "STL": pl.Series([], dtype=pl.Float64),
+                "BLK": pl.Series([], dtype=pl.Float64),
+                "TOV": pl.Series([], dtype=pl.Float64),
+                "FG%": pl.Series([], dtype=pl.Float64),
+                "3 FG%": pl.Series([], dtype=pl.Float64),
+                "FT%": pl.Series([], dtype=pl.Float64),
+                "FGA": pl.Series([], dtype=pl.Float64),
+                "FGM": pl.Series([], dtype=pl.Float64),
+                "FG3A": pl.Series([], dtype=pl.Float64),
+                "FG3M": pl.Series([], dtype=pl.Float64),
+                "FTA": pl.Series([], dtype=pl.Float64),
+                "FTM": pl.Series([], dtype=pl.Float64),
+                "MIN": pl.Series([], dtype=pl.Float64),
+            }
+        )
+
+    colunas_a_manter = [
+        "nome", "PTS", "REB", "AST", "STL", "BLK", "TOV",
+        "FG%", "3 FG%", "FT%", "FGA", "FGM", "FG3A", "FG3M", "FTA", "FTM", "MIN"
+    ]
+
+    # Entrada do jogador
+    if jogador_input:
         try:
-            dados_novos = df_carreira.with_columns(pl.lit(nome).alias("nome"))
-            dados_novos = dados_novos.select(colunas_a_manter)
-            nova_linha_df = pl.DataFrame([dados_novos.row(0)], schema=colunas_a_manter)
-            st.session_state["dados"] = st.session_state["dados"].vstack(nova_linha_df)
+            nome = jogador_dict[0]["full_name"]
         except Exception as e:
-            st.write("Erro:", e)
+            st.write(" ")
+        if 'nome' in locals():
+            try:
+                dados_novos = df_carreira.with_columns(pl.lit(nome).alias("nome"))
+                dados_novos = dados_novos.select(colunas_a_manter)
+                nova_linha_df = pl.DataFrame([dados_novos.row(0)], schema=colunas_a_manter)
+                st.session_state["dados_temporada"] = st.session_state["dados_temporada"].vstack(nova_linha_df)
+            except Exception as e:
+                st.write("Erro:", e)
 
-# Exibe o DataFrame atualizado
-df = st.session_state["dados"]
-df = df.to_pandas()
+    # Exibe o DataFrame atualizado
+    df = st.session_state["dados_temporada"]
+    df = df.to_pandas()
 
-fig = px.scatter(df, x=stat_1, y=stat_2, text='nome', log_x=True, size_max=60)
-fig.update_traces(textposition='top center')
+    fig = px.scatter(df, x=stat_1, y=stat_2, text='nome', log_x=True, size_max=60)
+    fig.update_traces(textposition='top center')
 
-fig.update_layout(
-    height=800,
-    title_text='Comparação de jogadores'
-)
+    fig.update_layout(
+        height=400,
+        title_text='Comparação de jogadores'
+    )
 
-st.plotly_chart(fig)
-
+    st.plotly_chart(fig)
 
 
