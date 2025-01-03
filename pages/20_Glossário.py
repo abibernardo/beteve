@@ -19,7 +19,7 @@ glossario = {
     "MIN": "Minutos jogados.",
 }
 
-st.set_page_config(page_title="Glossário de Estatísticas NBA", layout="wide")
+
 
 st.title("Glossário de Estatísticas da NBA")
 st.divider()
