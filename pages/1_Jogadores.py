@@ -363,21 +363,24 @@ if jogador_input:
                     .with_columns((pl.lit(df_jogos.height) - pl.col("jogos")).alias("jogos"))
             )
 
+            st.divider()
             col11, col12 = st.columns(2)
             if jogador_input:
                 with col11:
                     stat = st.selectbox(
                         'Estatística de interesse',
                         stats, key='stats')
-                st.write(f"## {stat} de {nome}: {temp}")
                 fig = px.line(df_jogos, x="jogos", y=stat)
                 st.plotly_chart(fig)
                 if stat not in ["FG%", "3 FG%", "FT%"]:
                     media = round(df_jogos_display[stat].mean(), 1)
-                    st.write(f"**Média de {media}**")
+                    st.markdown(
+                        f"<p style='font-size:18px; font-weight:bold; text-align:center;'>Média de {media}</p>",
+                        unsafe_allow_html=True)
 
         elif show == "CARREIRA":
             st.divider()
+            st.write(f"# Carreira de {nome}")
             cols = st.columns(5)
             stats_visual = [
                 (f"{ppg_carreira}", "pts"),
