@@ -9,7 +9,7 @@ import plotly.express as px
 import plotly.graph_objects as go
 
 st.title("Líderes da Liga")
-escolha = st.radio(" ", ["Geral", "Por Time"])
+escolha = st.radio(" ", ["Geral", "Por Time"], horizontal=True)
 st.divider()
 times_abr = [
     "ATL",  # Atlanta Hawks
