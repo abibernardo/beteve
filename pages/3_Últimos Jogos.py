@@ -97,7 +97,7 @@ def achar_time(time_input):
 def achar_jogo_jogador(jogador_id):
     try:
         # Busca jogos associados ao jogador
-        jogo = LeagueGameFinder(player_id_nullable=jogador_id)
+        jogo = LeagueGameFinder(player_id_nullable=jogador_id, season_type_nullable = 'Regular Season')
         df = jogo.league_game_finder_results.get_data_frame()
     except Exception as e:
         st.write(f"Erro ao buscar dados: {e}")
