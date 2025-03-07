@@ -72,6 +72,7 @@ def achar_jogo(jogo, nome):
         df_jogos = pl.from_pandas(df)
         df_jogos = df_jogos.with_columns(
             pl.col("GAME_DATE").alias("DATA"),
+            (pl.col("TEAM_NAME")).alias("TIME"),
             pl.col("WL").alias("W/L"),
             pl.col("PTS"),
             pl.col("REB"),
@@ -90,11 +91,12 @@ def achar_jogo(jogo, nome):
             pl.col("FTM"),
             pl.col("MIN"))
         df_jogos = df_jogos.with_columns(
-            (pl.col("SEASON_ID").str.slice(1).cast(pl.Int32) + 1).alias("SEASON_ID")
+            (pl.col("SEASON_ID").str.slice(1).cast(pl.Int32) + 1).alias("TEMPORADA")
         )
         df_jogos = df_jogos.select(
-            ["DATA", "W/L", "PTS", "REB", "AST", "STL", "BLK", "FG%", "3 FG%", "FT%", "FGM", "FGA", "FG3M", "FG3A",
-             "FTM", "FTA", "MIN"])
+            ["DATA", "MATCHUP", "W/L", "PTS", "REB", "AST", "STL", "BLK", "FG%", "3 FG%", "FT%", "FGM",
+             "FGA", "FG3M", "FG3A", "FTM", "FTA", "MIN"]
+        )
 
         return df_jogos
     else:
@@ -104,6 +106,7 @@ def achar_jogo(jogo, nome):
 
 st.title("MELHORES PERFORMANCES")
 jogador_input = st.text_input("De que jogador você quer ver as estatísticas?", placeholder="James Harden")
+temporada = st.radio(" ", ["Temporada Regular", "Playoffs"], horizontal=True)
 st.divider()
 st.write("### Buscar jogos em que o jogador teve pelo menos:")
 col1, col2, col3, col4, col5, col6 = st.columns(6)
@@ -135,19 +138,27 @@ if jogador_input:
     try:
         if jogador_id:
             nome = jogador_dict[0]["full_name"]
-            jogo = LeagueGameFinder(player_id_nullable=jogador_id, gt_pts_nullable = pts, gt_ast_nullable = ast, gt_reb_nullable = reb, gt_stl_nullable=stl, gt_blk_nullable=blk, gt_fg3m_nullable = fm3, gt_fg_pct_nullable = fg_pct/100, gt_fg3_pct_nullable = fg3_pct/100)
+            if temporada in "Temporada Regular":
+                jogo = LeagueGameFinder(player_id_nullable=jogador_id, season_type_nullable = "Regular Season", gt_pts_nullable = pts, gt_ast_nullable = ast, gt_reb_nullable = reb, gt_stl_nullable=stl, gt_blk_nullable=blk, gt_fg3m_nullable = fm3, gt_fg_pct_nullable = fg_pct/100, gt_fg3_pct_nullable = fg3_pct/100)
+            else:
+                jogo = LeagueGameFinder(player_id_nullable=jogador_id, season_type_nullable="Playoffs", gt_pts_nullable = pts, gt_ast_nullable = ast, gt_reb_nullable = reb, gt_stl_nullable = stl, gt_blk_nullable = blk, gt_fg3m_nullable = fm3, gt_fg_pct_nullable = fg_pct / 100, gt_fg3_pct_nullable = fg3_pct / 100)
             df = achar_jogo(jogo, nome)
             qtd = df.height
 
             st.divider()
 
             if any(valor > 0 for valor in estatisticas):
-                st.write(f'### {nome} teve {qtd} jogos com pelo menos:')
+                if temporada in "Temporada Regular":
+                    st.write(f'### Na temporada regular, {nome} teve {qtd} jogos com pelo menos:')
+                elif temporada in "Playoffs":
+                    st.write(f'### Nos Playoffs, {nome} teve {qtd} jogos com pelo menos:')
                 for estatistica, tipos_estatisticas in zip(estatisticas, tipos_estatisticas):
                     if estatistica > 0:
-                        st.write(f'- ### **{estatistica} {tipos_estatisticas}**')
+                        st.write(f' ### **{estatistica} {tipos_estatisticas}**')
                 st.divider()
                 st.dataframe(df)
+                count_w = df.filter(pl.col("W/L") == "W").height
+                vitorias = round((count_w/qtd) * 100, 1)
+                st.write(f'**{nome} venceu {vitorias}% dos jogos em que alcançou essas estatísticas.**')
     except Exception as e:
         st.write(' ')
-
