@@ -2,7 +2,7 @@
 
 [theme]
 base = "dark"  # Ativa o tema escuro
-primaryColor = "#8b0000"  # Cor principal para botões e links
+primaryColor = "#8A80CC"  # Cor principal para botões e links
 #backgroundColor = "#A9A9A9"  # Cor de fundo da aplicação
 secondaryBackgroundColor = "#008B8B"  # Cor de fundo da barra lateral
 textColor = "#FFFFFF"  # Cor do texto principal
