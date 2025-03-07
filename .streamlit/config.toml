@@ -1,4 +1,7 @@
-[global]
-
 [theme]
-primaryColor = "#F63366"
+base = "dark"  # Ativa o tema escuro
+primaryColor = "#8A80CC"  # Cor principal para botões e links
+backgroundColor = "#A9A9A9"  # Cor de fundo da aplicação
+secondaryBackgroundColor = "#8A80CC"  # Cor de fundo da barra lateral
+textColor = "#FFFFFF"  # Cor do texto principal
+font = "sans serif"  # Opções: "sans serif", "serif", "monospace"
