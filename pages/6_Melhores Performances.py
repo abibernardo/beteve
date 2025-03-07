@@ -154,7 +154,7 @@ if jogador_input:
                     st.write(f'### Nos Playoffs, {nome} teve {qtd} jogos com pelo menos:')
                 for estatistica, tipos_estatisticas in zip(estatisticas, tipos_estatisticas):
                     if estatistica > 0:
-                        st.write(f' ### **{estatistica} {tipos_estatisticas}**')
+                        st.write(f'- ### {estatistica} {tipos_estatisticas}')
                 st.divider()
                 st.dataframe(df)
                 count_w = df.filter(pl.col("W/L") == "W").height
