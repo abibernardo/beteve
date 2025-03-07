@@ -104,7 +104,7 @@ def achar_jogo(jogo, nome):
 
 
 
-st.title("MELHORES PERFORMANCES")
+st.title("Melhores Performances")
 jogador_input = st.text_input("De que jogador você quer ver as estatísticas?", placeholder="James Harden")
 temporada = st.radio(" ", ["Temporada Regular", "Playoffs"], horizontal=True)
 st.divider()
