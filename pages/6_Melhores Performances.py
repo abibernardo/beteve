@@ -105,7 +105,7 @@ def achar_jogo(jogo, nome):
 
 
 st.title("Melhores Performances")
-jogador_input = st.text_input("De que jogador você quer ver as estatísticas?", placeholder="James Harden")
+jogador_input = st.text_input("De que jogador você quer ver as estatísticas?", placeholder="Nikola Jokic")
 temporada = st.radio(" ", ["Temporada Regular", "Playoffs"], horizontal=True)
 st.divider()
 st.write("### Buscar jogos em que o jogador teve pelo menos:")
