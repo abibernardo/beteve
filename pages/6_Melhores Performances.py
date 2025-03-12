@@ -156,9 +156,13 @@ if jogador_input:
                     if estatistica > 0:
                         st.write(f'- ### {estatistica} {tipos_estatisticas}')
                 st.divider()
-                st.dataframe(df)
                 count_w = df.filter(pl.col("W/L") == "W").height
-                vitorias = round((count_w/qtd) * 100, 1)
+                vitorias = round((count_w / qtd) * 100, 1)
+                ultimo_jogo = df[0, "DATA"]
                 st.write(f'**{nome} venceu {vitorias}% dos jogos em que alcançou essas estatísticas.**')
+                st.write(f'**A última vez em que {nome} teve essa performance foi em {ultimo_jogo}.**')
+                st.divider()
+                st.dataframe(df)
+
     except Exception as e:
         st.write(' ')
