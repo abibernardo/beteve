@@ -10,24 +10,42 @@ import plotly.express as px
 import plotly.graph_objects as go
 import time
 import requests
-from requests.exceptions import Timeout
+from nba_api.stats.library.http import NBAStatsHTTP
+from nba_api.stats.static import players
+import streamlit as st
 
-# Tenta forçar headers usados por navegadores (ajuda a reduzir bloqueios)
-try:
-    from nba_api.stats.library.http import NBAStatsHTTP
-    NBAStatsHTTP.headers = {
-        "Host": "stats.nba.com",
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)",
-        "Accept": "application/json, text/plain, */*",
-        "Accept-Language": "en-US,en;q=0.9",
-        "Connection": "keep-alive",
-        "Referer": "https://www.nba.com/",
-        "x-nba-stats-origin": "stats",
-        "x-nba-stats-token": "true",
-    }
-except Exception:
-    # se não for possível sobrescrever, não quebra — apenas segue
-    pass
+# --- Wrapper que conserta instabilidade no Streamlit Cloud ---
+class StableNBA(NBAStatsHTTP):
+    def send_api_request(self, endpoint, params):
+        headers = {
+            "User-Agent": (
+                "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+                "AppleWebKit/537.36 (KHTML, like Gecko) "
+                "Chrome/120.0.0.0 Safari/537.36"
+            ),
+            "Referer": "https://www.nba.com/",
+            "Origin": "https://www.nba.com"
+        }
+
+        for tentativa in range(4):  # 4 tentativas
+            try:
+                response = requests.get(
+                    self.BASE_URL.format(endpoint) ,
+                    params=params,
+                    headers=headers,
+                    timeout=8,
+                )
+                if response.status_code == 200:
+                    return response
+            except Exception:
+                pass
+
+            time.sleep(1.2)  # evita bloqueio
+
+        raise Exception("Falha ao acessar a API da NBA após várias tentativas.")
+
+# substitui o cliente interno da nba_api pelo nosso wrapper mais estável
+NBAStatsHTTP = StableNBA
 
 # objetos
 stats = [
@@ -68,120 +86,71 @@ stats2 = [
     "MIN"
 ]
 
-# -----------------------
-# CACHEADAS (API calls)
-# -----------------------
 
 @st.cache_data(ttl=3600)
-def cached_find_players_by_name(name: str):
-    """Busca jogadores estático (pode retornar lista vazia). Cacheada para evitar múltiplas requisições."""
-    if not name:
-        return []
-    try:
-        # players.find_players_by_full_name é um lookup estático, mas cache evita chamadas repetidas
-        return players.find_players_by_full_name(name)
-    except Exception as e:
-        # Retorna lista vazia em caso de erro (tratado depois)
-        return []
-
-@st.cache_data(ttl=3600)
-def cached_player_career_stats(player_id: int):
-    """Busca career stats (totais por temporada e totais de carreira)."""
-    if not player_id:
-        return None, None
-    try:
-        t0 = time.time()
-        stats_obj = playercareerstats.PlayerCareerStats(player_id=player_id)
-        df_season_totals = stats_obj.season_totals_regular_season.get_data_frame()
-        df_career_totals = stats_obj.career_totals_regular_season.get_data_frame()
-        # apenas para debug, não escreve no app porque cache roda antes em alguns casos
-        _ = time.time() - t0
-        return df_season_totals, df_career_totals
-    except Exception:
-        return None, None
-
-@st.cache_data(ttl=3600)
-def cached_player_games(player_id: int):
-    """Busca jogos do jogador via LeagueGameFinder."""
-    if not player_id:
-        return None
-    try:
-        t0 = time.time()
-        finder = LeagueGameFinder(player_id_nullable=player_id, season_type_nullable='Regular Season')
-        df = finder.league_game_finder_results.get_data_frame()
-        _ = time.time() - t0
-        return df
-    except Exception:
-        return None
-
-# -----------------------
-# Funções de transformação (mantive sua lógica)
-# -----------------------
-
 def achar_jogador(jogador_input):
-    """Wrapper que usa cache e retorna (jogador_dict, jogador_id) ou (None, None)."""
     if not jogador_input:
         return None, None
 
-    jogador_list = cached_find_players_by_name(jogador_input)
-
-    if not jogador_list:
-        st.warning("Jogador não encontrado ou a API não respondeu. Verifique o nome.")
+    try:
+        # timeout evita travamento infinito
+        jogador_dict = players.find_players_by_full_name(jogador_input)
+    except Exception:
+        st.write("⚠️ Não foi possível consultar o jogador. Verifique o nome.")
         return None, None
 
-    jogador = jogador_list[0]
-    jogador_id = jogador.get("id")
-    if not jogador_id:
-        st.warning("Não foi possível obter o ID do jogador.")
+    # se a API retornar lista vazia (caso comum quando dá rate limit)
+    if not jogador_dict:
+        st.write("⚠️ Jogador não encontrado ou API não respondeu.")
         return None, None
 
-    return jogador_list, jogador_id
+    # evita IndexError
+    jogador_id = jogador_dict[0].get("id", None)
+    if jogador_id is None:
+        st.write("⚠️ Não foi possível obter o ID do jogador.")
+        return None, None
+
+    return jogador_dict, jogador_id
 
 def achar_jogo(jogador_id):
-    """Retorna um DataFrame polars com os jogos ou None."""
-    df = cached_player_games(jogador_id)
-    if df is None or df.empty:
-        return None
-
-    df_jogos = pl.from_pandas(df)
-    # manter apenas colunas úteis e renomear
-    df_jogos = df_jogos.with_columns(
-        pl.col("GAME_DATE").alias("DATA"),
-        pl.col("WL").alias("W/L"),
-        pl.col("PTS"),
-        pl.col("REB"),
-        pl.col("AST"),
-        pl.col("STL"),
-        pl.col("BLK"),
-        pl.col("TOV"),
-        (pl.col("FG_PCT") * 100).alias("FG%"),
-        (pl.col("FG3_PCT") * 100).alias("3 FG%"),
-        (pl.col("FT_PCT") * 100).alias("FT%"),
-        pl.col("FGA"),
-        pl.col("FGM"),
-        pl.col("FG3A"),
-        pl.col("FG3M"),
-        pl.col("FTA"),
-        pl.col("FTM"),
-        pl.col("MIN"),
-        pl.col("SEASON_ID")
-    )
-    # Ajuste da coluna SEASON_ID para formato que você usa
-    # Alguns SEASON_IDs vêm como '22020' etc; seu anterior fazia slice e +1 — mantive semelhante
     try:
+        # Busca jogos associados ao jogador
+        jogo = LeagueGameFinder(player_id_nullable=jogador_id, season_type_nullable = 'Regular Season')
+        df = jogo.league_game_finder_results.get_data_frame()
+    except Exception as e:
+        st.write(f"Erro ao buscar dados: {e}")
+        df = pd.DataFrame()  # DataFrame vazio em caso de erro
+    if not df.empty:
+        df_jogos = pl.from_pandas(df)
+        df_jogos = df_jogos.with_columns(
+            pl.col("GAME_DATE").alias("DATA"),
+            pl.col("WL").alias("W/L"),
+            pl.col("PTS"),
+            pl.col("REB"),
+            pl.col("AST"),
+            pl.col("STL"),
+            pl.col("BLK"),
+            pl.col("TOV"),
+            (pl.col("FG_PCT") * 100).alias("FG%"),
+            (pl.col("FG3_PCT") * 100).alias("3 FG%"),
+            (pl.col("FT_PCT") * 100).alias("FT%"),
+            pl.col("FGA"),
+            pl.col("FGM"),
+            pl.col("FG3A"),
+            pl.col("FG3M"),
+            pl.col("FTA"),
+            pl.col("FTM"),
+            pl.col("MIN"))
         df_jogos = df_jogos.with_columns(
             (pl.col("SEASON_ID").str.slice(1).cast(pl.Int32) + 1).alias("SEASON_ID")
         )
-    except Exception:
-        # se falhar, deixa a coluna como está
-        pass
 
-    return df_jogos
+        return df_jogos
+    else:
+        st.write("Nenhum dado disponível para exibir.")
 
 def media_por_temporada(df_carreira):
-    if df_carreira is None:
-        return None
-    df = df_carreira.with_columns(
+    df_carreira = df_carreira.with_columns(
         pl.col("SEASON_ID").alias("temporada"),
         pl.col("SEASON_ID").str.extract(r"^(\d+)", 1).cast(pl.Int32).alias("ano"),
         pl.col("TEAM_ABBREVIATION").alias("time"),
@@ -203,11 +172,10 @@ def media_por_temporada(df_carreira):
         (pl.col("MIN") / pl.col("GP")).round(1),
         pl.col("GP").alias("Jogos")
     )
-    return df
+
+    return df_carreira
 
 def total_por_temporada(df_carreira):
-    if df_carreira is None:
-        return None
     df_total_carreira = df_carreira.with_columns(
         pl.col("SEASON_ID").alias("temporada"),
         pl.col("SEASON_ID").str.extract(r"^(\d+)", 1).cast(pl.Int32).alias("ano"),
@@ -232,9 +200,8 @@ def total_por_temporada(df_carreira):
     )
     return df_total_carreira
 
+
 def total_carreira(df_medias):
-    if df_medias is None:
-        return None
     df_totais_carreira = df_medias.with_columns(
         pl.col("PTS"),
         pl.col("REB"),
@@ -274,9 +241,8 @@ def total_carreira(df_medias):
     )
     return df_totais_carreira
 
+
 def medias_carreira(df_medias):
-    if df_medias is None:
-        return None
     df_medias = df_medias.with_columns(
         (pl.col("PTS") / pl.col("GP")).round(1),
         (pl.col("REB") / pl.col("GP")).round(1),
@@ -314,296 +280,221 @@ def medias_carreira(df_medias):
         pl.col("MIN"))
     return df_medias
 
-# -----------------------
-# UI / fluxo principal
-# -----------------------
 
 st.title("ANÁLISE DE JOGADORES")
 jogador_input = st.text_input("De que jogador você quer ver as estatísticas?", placeholder="Michael Jordan")
 show = st.radio(" ", ["POR TEMPORADA", "CARREIRA"], horizontal=True)
 
-if not jogador_input:
-    st.write(" ")  # nada por enquanto
-    st.stop()
-
-# Pegando jogador (cacheado)
-jogador_dict, jogador_id = achar_jogador(jogador_input)
-
-if jogador_id is None:
-    # Já mostramos aviso dentro de achar_jogador; interrompe execução para evitar chamadas subsequentes
-    st.stop()
-
-# Puxa career stats e jogos (cacheados)
-df_season_totals_raw, df_career_totals_raw = cached_player_career_stats(jogador_id)
-df_jogos_raw = cached_player_games(jogador_id)
-
-# Verifica retornos
-if df_season_totals_raw is None or df_career_totals_raw is None:
-    st.warning("Não foi possível obter estatísticas de carreira. Tente novamente mais tarde.")
-    st.stop()
-
-# Converte para polars e aplica transformações
-df_carreira = pl.from_pandas(df_season_totals_raw)
-df_medias = pl.from_pandas(df_career_totals_raw)
-
-# Processa jogos (pode ser None)
-df_jogos = None
-if df_jogos_raw is not None and not df_jogos_raw.empty:
-    df_jogos = pl.from_pandas(df_jogos_raw)
-
-# TRATANDO DADOS:  df_carreira = media por temporada
-df_total_carreira = total_por_temporada(df_carreira)
-df_carreira = media_por_temporada(df_carreira)
-
-# totais carreira
-totais_carreira = total_carreira(df_medias)
-# medias da carreira
-df_medias_proc = medias_carreira(df_medias)
-
-# proteção contra DataFrames vazios
-if df_medias_proc is None or df_medias_proc.height == 0:
-    st.warning("Dados de média de carreira indisponíveis.")
-    st.stop()
-
-# extrai métricas de carreira com fallback
-def safe_item(df, row, col_idx, default=0.0):
+if jogador_input:
     try:
-        return df.item(row, col_idx)
-    except Exception:
-        return default
+        ### PUXANDO DADOS
+        jogador_dict, jogador_id = achar_jogador(jogador_input)
+        stats_carreira = playercareerstats.PlayerCareerStats(player_id=jogador_id)   # stats de todas as temporadas
+        df_carreira = stats_carreira.season_totals_regular_season.get_data_frame()
+        df_carreira = pl.from_pandas(df_carreira)
+        df_medias = stats_carreira.career_totals_regular_season.get_data_frame()
+        df_medias = pl.from_pandas(df_medias)
+        df_jogos = achar_jogo(jogador_id)
 
-ppg_carreira = safe_item(df_medias_proc, 0, 0, 0.0)
-rpg_carreira = safe_item(df_medias_proc, 0, 1, 0.0)
-apg_carreira = safe_item(df_medias_proc, 0, 2, 0.0)
-spg_carreira = safe_item(df_medias_proc, 0, 3, 0.0)
-bpg_carreira = safe_item(df_medias_proc, 0, 4, 0.0)
-tpg_carreira = safe_item(df_medias_proc, 0, 5, 0.0)
-fg_carreira = safe_item(df_medias_proc, 0, 6, 0.0)
-fg3_carreira = safe_item(df_medias_proc, 0, 7, 0.0)
-ft_carreira = safe_item(df_medias_proc, 0, 8, 0.0)
+        ### TRATANDO DADOS:  df_carreira = media por temporada
+        df_total_carreira = total_por_temporada(df_carreira)
+        df_carreira = media_por_temporada(df_carreira)
 
-# -----------------------
-# Exibição (mantive sua lógica)
-# -----------------------
+        ### totais carreira
+        totais_carreira = total_carreira(df_medias)
+        ### medias da carreira
+        df_medias = medias_carreira(df_medias)
+        ppg_carreira = df_medias.item(0, 0)
+        rpg_carreira = df_medias.item(0, 1)
+        apg_carreira = df_medias.item(0, 2)
+        spg_carreira = df_medias.item(0, 3)
+        bpg_carreira = df_medias.item(0, 4)
+        tpg_carreira = df_medias.item(0, 5)
+        fg_carreira = df_medias.item(0, 6)
+        fg3_carreira = df_medias.item(0, 7)
+        ft_carreira = df_medias.item(0, 8)
 
-try:
-    nome = jogador_dict[0]["full_name"]
-except Exception:
-    nome = jogador_input
 
-if show == "POR TEMPORADA":
-    if df_jogos is None:
-        st.info("Nenhum jogo encontrado para exibir essa visualização.")
-        st.stop()
 
-    # Construção de SEASON_ID no formato 'XXXX-YYYY' para seleção
+    except Exception as e:
+        st.write(" ")
+else:
+    st.write(" ")
+
+
+
+if jogador_input:
     try:
-        df_jogos = df_jogos.with_columns(
-            pl.concat_str(
-                [
-                    (pl.col("SEASON_ID") - 1).cast(pl.Utf8),
-                    pl.lit("-"),
-                    pl.col("SEASON_ID").cast(pl.Utf8)
-                ]
-            ).alias("SEASON_ID")
-        )
-    except Exception:
-        # se a transformação falhar, segue sem modificar
-        pass
+        nome = jogador_dict[0]["full_name"]
+        if show == "POR TEMPORADA":
+            df_jogos = df_jogos.with_columns(
+                pl.concat_str(
+                    [
+                        (pl.col("SEASON_ID") - 1).cast(pl.Utf8),  # Subtrai 1 e converte para string
+                        pl.lit("-"),  # Adiciona o separador "-"
+                        pl.col("SEASON_ID").cast(pl.Utf8)  # Mantém o valor original como string
+                    ]
+                ).alias("SEASON_ID")  # Renomeia a nova coluna
+            )
+            st.divider()
 
-    st.divider()
+            # criando e ordenando temporadas
+            temporadas = df_jogos["SEASON_ID"].unique().to_list()
+            temporadas = [t for t in temporadas if "-" in t and len(t.split("-")) == 2]
+            def extrair_ano_inicial(temporada):
+                return int(temporada.split("-")[0])
+            temporadas = sorted(temporadas, key=extrair_ano_inicial, reverse=True)
 
-    temporadas = df_jogos["SEASON_ID"].unique().to_list()
-    temporadas = [t for t in temporadas if isinstance(t, str) and "-" in t and len(t.split("-")) == 2]
-    def extrair_ano_inicial(temporada):
-        return int(temporada.split("-")[0])
-    temporadas = sorted(temporadas, key=extrair_ano_inicial, reverse=True)
+            col7, col8 = st.columns(2)
+            with col7:
+                temp = st.selectbox("Selecione uma temporada", temporadas)
+            df_jogos = df_jogos.filter(pl.col("SEASON_ID") == temp)
+            ppg = round(df_jogos["PTS"].mean(), 1)
+            rpg = round(df_jogos["REB"].mean(), 1)
+            apg = round(df_jogos["AST"].mean(), 1)
+            spg = round(df_jogos["STL"].mean(), 1)
+            bpg = round(df_jogos["BLK"].mean(), 1)
+            fg = round((df_jogos["FGM"].sum() / df_jogos["FGA"].sum()) * 100, 1)
+            fg3 = round((df_jogos["FG3M"].sum() / df_jogos["FG3A"].sum()) * 100, 1)
+            ft = round((df_jogos["FTM"].sum() / df_jogos["FTA"].sum()) * 100, 1)
 
-    col7, col8 = st.columns(2)
-    with col7:
-        temp = st.selectbox("Selecione uma temporada", temporadas)
-    if not temp:
-        st.info("Selecione uma temporada.")
-        st.stop()
+            st.write(f"# {nome}: {temp}")
+            cols = st.columns(5)
+            stats_visual = [
+                (f"{ppg}", "pts"),
+                (f"{rpg}", "reb"),
+                (f"{apg}", "ast"),
+                (f"{spg}", "stl"),
+                (f"{bpg}", "blk")
+            ]
 
-    df_jogos = df_jogos.filter(pl.col("SEASON_ID") == temp)
+            # Iterando pelas colunas e adicionando estatísticas
+            for col, (value, label) in zip(cols, stats_visual):
+                with col:
+                    st.markdown(f"""
+                            <div style="text-align: center; background-color: #091836; padding: 10px; border-radius: 10px;">
+                                <p style="margin: 0; font-size: 24px; font-weight: bold; color: white;">{value}</p>
+                                <p style="margin: 0; font-size: 14px; color: gray;">{label}</p>
+                            </div>
+                            """, unsafe_allow_html=True)
 
-    # cálculos seguros com fallback
-    def safe_mean(col):
-        try:
-            return round(df_jogos[col].mean(), 1)
-        except Exception:
-            return 0.0
-
-    ppg = safe_mean("PTS")
-    rpg = safe_mean("REB")
-    apg = safe_mean("AST")
-    spg = safe_mean("STL")
-    bpg = safe_mean("BLK")
-
-    def safe_pct(numer_col, denom_col):
-        try:
-            num = df_jogos[numer_col].sum()
-            den = df_jogos[denom_col].sum()
-            if den == 0:
-                return 0.0
-            return round((num / den) * 100, 1)
-        except Exception:
-            return 0.0
-
-    fg = safe_pct("FGM", "FGA")
-    fg3 = safe_pct("FG3M", "FG3A")
-    ft = safe_pct("FTM", "FTA")
-
-    st.write(f"# {nome}: {temp}")
-    cols = st.columns(5)
-    stats_visual = [
-        (f"{ppg}", "pts"),
-        (f"{rpg}", "reb"),
-        (f"{apg}", "ast"),
-        (f"{spg}", "stl"),
-        (f"{bpg}", "blk")
-    ]
-
-    for col, (value, label) in zip(cols, stats_visual):
-        with col:
-            st.markdown(f"""
-                    <div style="text-align: center; background-color: #091836; padding: 10px; border-radius: 10px;">
-                        <p style="margin: 0; font-size: 24px; font-weight: bold; color: white;">{value}</p>
-                        <p style="margin: 0; font-size: 14px; color: gray;">{label}</p>
+            # Exibindo as porcentagens com formatação adicional
+            st.markdown("""
+                    <div style="text-align: center; margin-top: 20px;">
+                        <p style="font-size: 28px; font-weight: bold; color: #333;">
+                            {fg:.1f}% FG / {fg3:.1f}% 3 PTS / {ft:.1f}% FT
+                        </p>
                     </div>
-                    """, unsafe_allow_html=True)
+                    """.format(fg=fg, fg3=fg3, ft=ft), unsafe_allow_html=True)
 
-    st.markdown("""
-            <div style="text-align: center; margin-top: 20px;">
-                <p style="font-size: 28px; font-weight: bold; color: #333;">
-                    {fg:.1f}% FG / {fg3:.1f}% 3 PTS / {ft:.1f}% FT
-                </p>
-            </div>
-            """.format(fg=fg, fg3=fg3, ft=ft), unsafe_allow_html=True)
+            df_jogos_display = df_jogos.select(
+                pl.col("DATA"),
+                pl.col("MATCHUP"),
+                pl.col("W/L"),
+                pl.col("PTS"),
+                pl.col("REB"),
+                pl.col("AST"),
+                pl.col("STL"),
+                pl.col("BLK"),
+                pl.col("TOV"),
+                pl.col("FG%"),
+                pl.col("3 FG%"),
+                pl.col("FT%"),
+                pl.col("FGA"),
+                pl.col("FGM"),
+                pl.col("FG3A"),
+                pl.col("FG3M"),
+                pl.col("FTA"),
+                pl.col("FTM"),
+                pl.col("MIN"))
+            df_jogos = (
+                df_jogos
+                    .with_row_count(name="jogos")
+                    .with_columns((pl.lit(df_jogos.height) - pl.col("jogos")).alias("jogos"))
+            )
 
-    df_jogos_display = df_jogos.select(
-        pl.col("DATA"),
-        pl.col("MATCHUP"),
-        pl.col("W/L"),
-        pl.col("PTS"),
-        pl.col("REB"),
-        pl.col("AST"),
-        pl.col("STL"),
-        pl.col("BLK"),
-        pl.col("TOV"),
-        pl.col("FG%"),
-        pl.col("3 FG%"),
-        pl.col("FT%"),
-        pl.col("FGA"),
-        pl.col("FGM"),
-        pl.col("FG3A"),
-        pl.col("FG3M"),
-        pl.col("FTA"),
-        pl.col("FTM"),
-        pl.col("MIN")
-    )
+            st.divider()
+            col11, col12 = st.columns(2)
+            if jogador_input:
+                with col11:
+                    stat = st.selectbox(
+                        'Estatística de interesse',
+                        stats, key='stats')
+                fig = px.line(df_jogos, x="jogos", y=stat)
+                st.plotly_chart(fig)
+                if stat not in ["FG%", "3 FG%", "FT%"]:
+                    media = round(df_jogos_display[stat].mean(), 1)
+                    st.markdown(
+                        f"<p style='font-size:18px; font-weight:bold; text-align:center;'>Média de {media}</p>",
+                        unsafe_allow_html=True)
 
-    df_jogos = (
-        df_jogos
-            .with_row_count(name="jogos")
-            .with_columns((pl.lit(df_jogos.height) - pl.col("jogos")).alias("jogos"))
-    )
+        elif show == "CARREIRA":
+            st.divider()
+            st.write(f"# Carreira de {nome}")
+            cols = st.columns(5)
+            stats_visual = [
+                (f"{ppg_carreira}", "pts"),
+                (f"{rpg_carreira}", "reb"),
+                (f"{apg_carreira}", "ast"),
+                (f"{spg_carreira}", "stl"),
+                (f"{bpg_carreira}", "blk")
+            ]
 
-    st.divider()
-    col11, col12 = st.columns(2)
-    with col11:
-        stat = st.selectbox('Estatística de interesse', stats, key='stats')
+            # Iterando pelas colunas e adicionando estatísticas
+            for col, (value, label) in zip(cols, stats_visual):
+                with col:
+                    st.markdown(f"""
+                                   <div style="text-align: center; background-color: #091836; padding: 10px; border-radius: 10px;">
+                                       <p style="margin: 0; font-size: 24px; font-weight: bold; color: white;">{value}</p>
+                                       <p style="margin: 0; font-size: 14px; color: gray;">{label}</p>
+                                   </div>
+                                   """, unsafe_allow_html=True)
 
-    fig = px.line(df_jogos.to_pandas(), x="jogos", y=stat)
-    st.plotly_chart(fig)
-
-    if stat not in ["FG%", "3 FG%", "FT%"]:
-        try:
-            media = round(df_jogos_display[stat].mean(), 1)
-        except Exception:
-            media = 0.0
-        st.markdown(
-            f"<p style='font-size:18px; font-weight:bold; text-align:center;'>Média de {media}</p>",
-            unsafe_allow_html=True)
-
-elif show == "CARREIRA":
-    st.divider()
-    st.write(f"# Carreira de {nome}")
-    cols = st.columns(5)
-    stats_visual = [
-        (f"{ppg_carreira}", "pts"),
-        (f"{rpg_carreira}", "reb"),
-        (f"{apg_carreira}", "ast"),
-        (f"{spg_carreira}", "stl"),
-        (f"{bpg_carreira}", "blk")
-    ]
-
-    for col, (value, label) in zip(cols, stats_visual):
-        with col:
-            st.markdown(f"""
-                           <div style="text-align: center; background-color: #091836; padding: 10px; border-radius: 10px;">
-                               <p style="margin: 0; font-size: 24px; font-weight: bold; color: white;">{value}</p>
-                               <p style="margin: 0; font-size: 14px; color: gray;">{label}</p>
+            # Exibindo as porcentagens com formatação adicional
+            st.markdown("""
+                           <div style="text-align: center; margin-top: 20px;">
+                               <p style="font-size: 28px; font-weight: bold; color: #333;">
+                                   {fg:.1f}% FG / {fg3:.1f}% 3 PTS / {ft:.1f}% FT
+                               </p>
                            </div>
-                           """, unsafe_allow_html=True)
-
-    st.markdown("""
-                   <div style="text-align: center; margin-top: 20px;">
-                       <p style="font-size: 28px; font-weight: bold; color: #333;">
-                           {fg:.1f}% FG / {fg3:.1f}% 3 PTS / {ft:.1f}% FT
-                       </p>
-                   </div>
-                   """.format(fg=fg_carreira, fg3=fg3_carreira, ft=ft_carreira), unsafe_allow_html=True)
-    st.divider()
-    st.write("## Estatísticas ao longo da carreira")
-    col1, col15, col2 = st.columns(3)
-    with col1:
-        stat = st.selectbox('Estatística de interesse', stats, key='stats_career')
-    with col2:
-        tipo_stat = st.radio("Forma da estatística", ["Por jogo", "Total"])
-
-    # valores seguros para médias e totais
-    try:
-        media_carreira = df_medias_proc.select(pl.col(stat).first()).item()
-    except Exception:
-        media_carreira = 0.0
-    try:
-        total_carreira_stat = totais_carreira.select(pl.col(stat).first()).item()
-    except Exception:
-        total_carreira_stat = 0.0
-
-    if tipo_stat == "Por jogo":
-        try:
-            fig = px.line(df_carreira.to_pandas(), x="ano", y=stat)
-            fig.update_layout(
-                xaxis=dict(
-                    tickmode="array",
-                    tickvals=df_carreira["ano"].to_list(),
-                )
-            )
-            st.plotly_chart(fig)
-            st.markdown(
-                f"<p style='font-size:18px; font-weight:bold; text-align:center;'>{media_carreira:.1f} {stat} de média na carreira</p>",
-                unsafe_allow_html=True)
+                           """.format(fg=fg_carreira, fg3=fg3_carreira, ft=ft_carreira), unsafe_allow_html=True)
             st.divider()
-        except Exception:
-            st.info("Não foi possível plotar a estatística por jogo.")
-    elif tipo_stat == "Total":
-        try:
-            fig = px.line(df_total_carreira.to_pandas(), x="ano", y=stat)
-            fig.update_layout(
-                xaxis=dict(
-                    tickmode="array",
-                    tickvals=df_total_carreira["ano"].to_list(),
-                )
-            )
-            st.plotly_chart(fig)
-            st.markdown(
-                f"<p style='font-size:18px; font-weight:bold; text-align:center;'>{total_carreira_stat} {stat} na carreira</p>",
-                unsafe_allow_html=True)
-            st.divider()
-        except Exception:
-            st.info("Não foi possível plotar a estatística total.")
+            st.write("## Estatísticas ao longo da carreira")
+            col1, col15, col2 = st.columns(3)
+            with col1:
+                stat = st.selectbox(
+                    'Estatística de interesse',
+                    stats, key='stats')
+            with col2:
+                tipo_stat = st.radio("Forma da estatística", ["Por jogo", "Total"])
+            media_carreira = df_medias.select(pl.col(stat).first()).item()
+            total_carreira_stat = totais_carreira.select(pl.col(stat).first()).item()
 
-# fim do script
+            if tipo_stat == "Por jogo":
+                fig = px.line(df_carreira, x="ano", y=stat)
+                fig.update_layout(
+                    xaxis=dict(
+                        tickmode="array",  # Define os ticks manualmente
+                        tickvals=df_carreira["ano"].to_list(),  # Usa os valores únicos da coluna 'ano'
+                    )
+                )
+                st.plotly_chart(fig)
+                st.markdown(
+                    f"<p style='font-size:18px; font-weight:bold; text-align:center;'>{media_carreira:.1f} {stat} de média na carreira</p>",
+                    unsafe_allow_html=True)
+                st.divider()
+            elif tipo_stat == "Total":
+                fig = px.line(df_total_carreira, x="ano", y=stat)
+                fig.update_layout(
+                    xaxis=dict(
+                        tickmode="array",  # Define os ticks manualmente
+                        tickvals=df_total_carreira["ano"].to_list(),  # Usa os valores únicos da coluna 'ano'
+                    )
+                )
+                st.plotly_chart(fig)
+                st.markdown(
+                    f"<p style='font-size:18px; font-weight:bold; text-align:center;'>{total_carreira_stat} {stat} na carreira</p>",
+                    unsafe_allow_html=True)
+                st.divider()
+    except Exception as e:
+        st.write(" ")
