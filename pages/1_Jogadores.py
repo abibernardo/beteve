@@ -8,13 +8,11 @@ import pandas as pd
 import polars as pl
 import plotly.express as px
 import plotly.graph_objects as go
-import time
 import requests
+import time
 from nba_api.stats.library.http import NBAStatsHTTP
-from nba_api.stats.static import players
-import streamlit as st
 
-# --- Wrapper que conserta instabilidade no Streamlit Cloud ---
+# Wrapper que substitui TODAS as requisições internas da nba_api
 class StableNBA(NBAStatsHTTP):
     def send_api_request(self, endpoint, params):
         headers = {
@@ -24,28 +22,29 @@ class StableNBA(NBAStatsHTTP):
                 "Chrome/120.0.0.0 Safari/537.36"
             ),
             "Referer": "https://www.nba.com/",
-            "Origin": "https://www.nba.com"
+            "Origin": "https://www.nba.com",
+            "Accept": "application/json, text/plain, */*",
         }
 
-        for tentativa in range(4):  # 4 tentativas
+        for tentativa in range(4):  # tenta até 4 vezes
             try:
-                response = requests.get(
-                    self.BASE_URL.format(endpoint) ,
+                resp = requests.get(
+                    self.BASE_URL.format(endpoint),
                     params=params,
                     headers=headers,
-                    timeout=8,
+                    timeout=8
                 )
-                if response.status_code == 200:
-                    return response
+                if resp.status_code == 200:
+                    return resp
             except Exception:
                 pass
+            time.sleep(1.2)
 
-            time.sleep(1.2)  # evita bloqueio
+        raise Exception("Falha ao acessar a API da NBA após múltiplas tentativas.")
 
-        raise Exception("Falha ao acessar a API da NBA após várias tentativas.")
-
-# substitui o cliente interno da nba_api pelo nosso wrapper mais estável
+# Substitui o cliente nativo
 NBAStatsHTTP = StableNBA
+
 
 # objetos
 stats = [
@@ -111,6 +110,18 @@ def achar_jogador(jogador_input):
         return None, None
 
     return jogador_dict, jogador_id
+
+@st.cache_data(ttl=3600)
+def get_career(jogador_id):
+    from nba_api.stats.endpoints import playercareerstats
+    return playercareerstats.PlayerCareerStats(player_id=jogador_id)
+
+@st.cache_data(ttl=3600)
+def get_games(jogador_id):
+    from nba_api.stats.endpoints import LeagueGameFinder
+    jogo = LeagueGameFinder(player_id_nullable=jogador_id, season_type_nullable='Regular Season')
+    return jogo.league_game_finder_results.get_data_frame()
+
 
 def achar_jogo(jogador_id):
     try:
@@ -289,12 +300,13 @@ if jogador_input:
     try:
         ### PUXANDO DADOS
         jogador_dict, jogador_id = achar_jogador(jogador_input)
-        stats_carreira = playercareerstats.PlayerCareerStats(player_id=jogador_id)   # stats de todas as temporadas
+        stats_carreira = get_career(jogador_id)
         df_carreira = stats_carreira.season_totals_regular_season.get_data_frame()
         df_carreira = pl.from_pandas(df_carreira)
         df_medias = stats_carreira.career_totals_regular_season.get_data_frame()
         df_medias = pl.from_pandas(df_medias)
-        df_jogos = achar_jogo(jogador_id)
+        df_jogos = pl.from_pandas(get_games(jogador_id))
+
 
         ### TRATANDO DADOS:  df_carreira = media por temporada
         df_total_carreira = total_por_temporada(df_carreira)
