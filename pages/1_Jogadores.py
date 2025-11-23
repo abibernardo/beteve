@@ -49,18 +49,30 @@ stats2 = [
 ]
 
 
+@st.cache_data(ttl=3600)
 def achar_jogador(jogador_input):
-    if jogador_input:
-        try:
-            jogador_dict = players.find_players_by_full_name(jogador_input)
-        except Exception as e:
-            st.divider()
-            st.write("# Confira o nome do jogador.")
-        try:
-            jogador_id = jogador_dict[0]["id"]
-            return jogador_dict, jogador_id
-        except Exception as e:
-            st.write("## Confira o nome do jogador.")
+    if not jogador_input:
+        return None, None
+
+    try:
+        # timeout evita travamento infinito
+        jogador_dict = players.find_players_by_full_name(jogador_input)
+    except Exception:
+        st.write("⚠️ Não foi possível consultar o jogador. Verifique o nome.")
+        return None, None
+
+    # se a API retornar lista vazia (caso comum quando dá rate limit)
+    if not jogador_dict:
+        st.write("⚠️ Jogador não encontrado ou API não respondeu.")
+        return None, None
+
+    # evita IndexError
+    jogador_id = jogador_dict[0].get("id", None)
+    if jogador_id is None:
+        st.write("⚠️ Não foi possível obter o ID do jogador.")
+        return None, None
+
+    return jogador_dict, jogador_id
 
 def achar_jogo(jogador_id):
     try:
