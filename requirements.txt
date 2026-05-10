@@ -1,4 +1,5 @@
 plotly==5.22.0
 streamlit==1.37.0
 polars==1.8.2
-nba_api==1.5.1
+nba_api==1.5.2
+pandas
