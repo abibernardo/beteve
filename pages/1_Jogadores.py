@@ -7,6 +7,14 @@ import pandas as pd
 import polars as pl
 import plotly.express as px
 
+from nba_api.stats.library.http import NBAStatsHTTP
+
+NBAStatsHTTP.TIMEOUT = 10
+
+NBAStatsHTTP._session.headers.update({
+    "User-Agent": "Mozilla/5.0"
+})
+
 st.set_page_config(layout="wide")
 
 # =========================================================
